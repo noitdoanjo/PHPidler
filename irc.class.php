@@ -7,7 +7,7 @@ class IRC{
 	public $nick = 'bot';
 	public $master = 'admin';
 	public $handlers = array();
-	public $plugindir = './functionality/';
+	public $plugindir = './plugins/';
 	public $debug = false;
 	public $startbotting = false;
 	public $reconnect = true;
