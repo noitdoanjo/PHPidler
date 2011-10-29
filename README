@@ -1,0 +1,4 @@
+IRC bot in PHP
+
+Configure it in config.php (there is a template in config.example.php) and run bot.php
+Based on turl's code https://github.com/turl
