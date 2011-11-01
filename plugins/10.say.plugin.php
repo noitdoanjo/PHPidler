@@ -1,8 +1,8 @@
 <?php
 /*
 	Commands:
-		.say #channel something
-		.say somebody something
+		.say <#channel> <something>
+		.say <somebody> <something>
 */
 
 function repeatOnChannel(&$irc,$msg,$channel,$matches,$who) 

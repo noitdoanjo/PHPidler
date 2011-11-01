@@ -1,8 +1,7 @@
 <?php
 /*
 	Commands:
-		.memusage
-		.memusage real
+		.memusage [real]
 */
 
 function byte_convert($bytes)

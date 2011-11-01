@@ -1,7 +1,7 @@
 <?php
 /*
 	Commands:
-		.ping host
+		.ping <host>
 */
 
 /**
