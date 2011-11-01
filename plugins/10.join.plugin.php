@@ -1,5 +1,13 @@
 <?php
-// Requires userlevels.plugin.php
+/*
+	Requires userlevels.plugin.php
+	
+	Commands:
+		.j #channel
+		.join #channel
+		.p #channel
+		.part #channel
+*/
 
 $this->handlers['*']['joinChannel'] = '/^\.(j|join) #([A-Za-z0-9\._#+-]*)/';
 $this->handlers['*']['partChannel'] = '/^\.(p|part) #([A-Za-z0-9\._#+-]*)( (.+))?/';

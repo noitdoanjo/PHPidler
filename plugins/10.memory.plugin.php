@@ -1,4 +1,9 @@
 <?php
+/*
+	Commands:
+		.memusage
+		.memusage real
+*/
 
 function byte_convert($bytes)
 {
