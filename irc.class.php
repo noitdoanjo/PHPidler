@@ -71,18 +71,21 @@ class IRC{
 	{
 		if(strlen($msg)>400)
 		{
-			$len = 400;
+			$len = 399;	
+			$char = substr($msg, $len ,1);
 			while($char != ' ')
 			{
 				$len--;
-				$char = substr($msg,$len,1);
+				$char = substr($msg, $len ,1);
 			}
-			$msg2 = substr($msg,$len+1);
-			$msg = substr($msg,0,$len);
-
+			$msg2 = substr($msg, $len+1);
+			$msg  = substr($msg, 0, $len);
 		}
+		
 		$this->sendCommand('PRIVMSG '.$channel.' :'.$msg."\r\n");
-		if(isset($msg2)) return $this->sayToChannel($msg2,$channel);
+		if (isset($msg2)) {
+			return $this->sayToChannel($msg2,$channel);
+		}
 	}
 
 	public function connect(){
