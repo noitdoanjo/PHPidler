@@ -21,7 +21,7 @@ function ping($hostname){
  * @return boolean True if the ip is private, false otherwise
  * @param string $ip
  */
-function ip_is_private($ip){
+function ipIsPrivate($ip){
 	$ip = sprintf('%u', ip2long($ip));
 	return ( ($ip >= sprintf('%u', ip2long('10.0.0.0')))    and ($ip <= sprintf('%u', ip2long('10.255.255.255'))) ) or
 		   ( ($ip >= sprintf('%u', ip2long('172.16.0.0')))  and ($ip <= sprintf('%u', ip2long('172.31.255.255'))) ) or
@@ -34,7 +34,7 @@ function ip_is_private($ip){
  * @return boolean True if the ip is loopback, false otherwise
  * @param string $ip
  */
-function ip_is_loopback($ip){
+function ipIsLoopback($ip){
 	$ip = sprintf('%u', ip2long($ip));
 	return ( ($ip >= sprintf('%u', ip2long('127.0.0.0'))) and ($ip <= sprintf('%u', ip2long('127.255.255.255'))) );
 }
@@ -47,7 +47,7 @@ function checkStatus(&$irc,$msg,$channel,$matches,$who)
 	if ( (!preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $ip)) and ($ip == $matches[1]) ) {
 		// It isn't a ip address and doesn't resolve as a domain name
 		$irc->sayToChannel('Unknown host ' . $ip, $channel);
-	}else if (! (ip_is_private($ip) or ip_is_loopback($ip)) ) {
+	}else if (! (ipIsPrivate($ip) or ipIsLoopback($ip)) ) {
 		$ping = ping($ip);
 		foreach ($ping as $thisline) {
 			$irc->sayToChannel($thisline, $channel);
