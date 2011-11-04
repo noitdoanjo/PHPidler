@@ -133,18 +133,18 @@ class IRC{
 					}
 					
 					//Handle own joins and parts
-					if (preg_match('@^:'.preg_quote($this->nick, '!.+ JOIN :(\S+)$@').'@', $this->server['READ_BUFFER'], $matchs))
+					if (preg_match('@^:'.preg_quote($this->nick, '@').'!.+ JOIN :(.+)$@', $this->server['READ_BUFFER'], $matchs))
 					{
 						//This is a join. Add the channel to the list
 						$this->addChannels($matchs[1]);
-						if ($irc->debug) {
+						if ($this->debug) {
 							echo 'Joining '.$matchs[1];
 						}
-					}else if (preg_match('@^:'.preg_quote($this->nick, '!.+ PART :(\S+)$@').'@', $this->server['READ_BUFFER'], $matchs))
+					}else if (preg_match('@^:'.preg_quote($this->nick, '@').'!.+ PART (.+)$@', $this->server['READ_BUFFER'], $matchs))
 					{
 						//This is a part. Remove the channel from the list
 						$this->removeChannels($matchs[1]);
-						if ($irc->debug) {
+						if ($this->debug) {
 							echo 'Parting '.$matchs[1];
 						}
 					}									
