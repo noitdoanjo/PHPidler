@@ -132,6 +132,24 @@ class IRC{
 						//Command that must be replied with PONG and the same key sent.
 					}
 					
+					//Handle own joins and parts
+					if (preg_match('@^:'.preg_quote($this->nick, '!.+ JOIN :(\S+)$@').'@', $this->server['READ_BUFFER'], $matchs))
+					{
+						//This is a join. Add the channel to the list
+						$this->addChannels($matchs[1]);
+						if ($irc->debug) {
+							echo 'Joining '.$matchs[1];
+						}
+					}else if (preg_match('@^:'.preg_quote($this->nick, '!.+ PART :(\S+)$@').'@', $this->server['READ_BUFFER'], $matchs))
+					{
+						//This is a part. Remove the channel from the list
+						$this->removeChannels($matchs[1]);
+						if ($irc->debug) {
+							echo 'Parting '.$matchs[1];
+						}
+					}									
+
+					//If we are using plugins and somebody say something, we want to run the handlers
 					if($this->startbotting == true &&
 						/*strrpos($this->server['READ_BUFFER'],':'.$this->master."!n")!==false &&*/
 						strrpos($this->server['READ_BUFFER'],'PRIVMSG')!==false)
