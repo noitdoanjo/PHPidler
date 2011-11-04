@@ -21,7 +21,7 @@ class database{
         
         catch(PDOException $e) {
             if ($irc->debug) {
-                $e->getMessage();
+                echo $e->getMessage();
             }
         }
     }
@@ -52,7 +52,7 @@ class database{
         
         catch(PDOException $e) {
             if ($irc->debug) {
-                $e->getMessage();
+                echo $e->getMessage();
             }
         }
     }    
@@ -73,7 +73,7 @@ class database{
         
         catch(PDOException $e) {
             if ($irc->debug) {
-                $e->getMessage();
+                echo $e->getMessage();
             }
         }
     }
@@ -109,7 +109,7 @@ class database{
         
         catch(PDOException $e) {
             if ($irc->debug) {   
-                $e->getMessage();
+                echo $e->getMessage();
             }
         }
     }
@@ -144,7 +144,7 @@ class database{
         
         catch(PDOException $e) {
             if ($irc->debug) {
-                $e->getMessage();
+                echo $e->getMessage();
             }
         }
     }
