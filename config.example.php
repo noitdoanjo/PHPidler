@@ -29,4 +29,7 @@ $config = Array(
     
     // Try to reconnect if something fails
     'reconnect' => true,
+    
+    // Path to the sqlite database
+    'db_path' => './db.sqlite',
 );
