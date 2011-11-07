@@ -11,6 +11,7 @@ class IRC{
 	public $debug = false;
 	public $startbotting = false;
 	public $reconnect = true;
+	public $db_path = './db.sqlite';
 	private $server;
 	
 	public function __construct($data)
@@ -133,19 +134,19 @@ class IRC{
 					}
 					
 					//Handle own joins and parts
-					if (preg_match('@^:'.preg_quote($this->nick, '@').'!.+ JOIN :(.+)$@', $this->server['READ_BUFFER'], $matchs))
+					if (preg_match('@^:'.preg_quote($this->nick, '@').'!.+ JOIN :(.+)$@', $this->server['READ_BUFFER'], $matches))
 					{
 						//This is a join. Add the channel to the list
-						$this->addChannels($matchs[1]);
+						$this->addChannels($matches[1]);
 						if ($this->debug) {
-							echo 'Joining '.$matchs[1];
+							echo 'Joining '.$matches[1];
 						}
-					}else if (preg_match('@^:'.preg_quote($this->nick, '@').'!.+ PART (.+)$@', $this->server['READ_BUFFER'], $matchs))
+					}else if (preg_match('@^:'.preg_quote($this->nick, '@').'!.+ PART (.+)$@', $this->server['READ_BUFFER'], $matches))
 					{
 						//This is a part. Remove the channel from the list
-						$this->removeChannels($matchs[1]);
+						$this->removeChannels($matches[1]);
 						if ($this->debug) {
-							echo 'Parting '.$matchs[1];
+							echo 'Parting '.$matches[1];
 						}
 					}									
 

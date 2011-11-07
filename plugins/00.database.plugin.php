@@ -33,19 +33,28 @@ class database{
 	 * @param string|null $plugin The name of the plugin. If null, it will be ignored
 	 * @return array
 	 */
-    public function get($name, $plugin = null) {
-        try{
-			if(is_null($plugin)){
-                $tmp = $this->handle->prepare('SELECT value FROM options WHERE name = ? ');
-                $tmp->execute(array($name));
-            }else{
-                $tmp = $this->handle->prepare('SELECT value FROM options WHERE name = ? AND plugin = ?');
-                $tmp->execute(array($name, $plugin));
+    public function get($name = null, $plugin = null) {
+			$sql = 'SELECT name,value FROM options WHERE 1';
+			$parameters = array();
+			
+			if(!is_null($name)){
+                $sql.= ' AND name = ?';
+                $parameters[] = $name;
             }
 			
-            $return = $tmp->fetchAll(PDO::FETCH_COLUMN, 0);
-			foreach ($return as $key =>$thisValue){
-				$return[$key] = unserialize($thisValue);
+			if(!is_null($plugin)){
+                $sql.= ' AND plugin = ?';
+                $parameters[] = $plugin;
+            }
+			
+        try{
+			$tmp = $this->handle->prepare($sql);
+			$tmp->execute($parameters);
+            $return = $tmp->fetchAll(PDO::FETCH_ASSOC);
+			foreach ($return as $key => $array){
+				foreach ($array as $thisKey => $thisValue){
+					$return[$key] = array($array['name'] => unserialize($array['value']));
+				}
 			}
 			return $return;
 		}
@@ -151,4 +160,4 @@ class database{
 	
 }
 
-$this->database = new database($config['db_path']);
+$this->database = new database($this->db_path);
