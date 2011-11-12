@@ -35,7 +35,7 @@ class memoryusage_plugin{
 			}else{
 				$mem = memory_get_usage(); 
 			}
-			$memory = byte_convert($mem);
+			$memory = $this->byte_convert($mem);
 			
 			//say it to the world!	
 			$irc->sayToChannel('I\'m using '.$memory.' of RAM to run currently', $channel);
