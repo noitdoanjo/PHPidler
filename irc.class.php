@@ -191,7 +191,7 @@ class IRC{
 			$dir = scandir($this->plugindir);
 			foreach($dir as $file)
 			{
-				if($file != '.' && $file != '..' && preg_match('/\.(say)\.plugin\.php$/',$file, $pluginName))
+				if($file != '.' && $file != '..' && preg_match('/\.(.*?)\.plugin\.php$/',$file, $pluginName))
 				{
 					//A plugin. Let's load it!
 					$thisfile = realpath($this->plugindir).'/'.basename($file);
