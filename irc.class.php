@@ -10,7 +10,7 @@ class IRC{
 	public $debug = false;
 	public $startbotting = false;
 	public $reconnect = true;
-	public $db_path = './db.sqlite';
+	public $pluginConfig = array();
 	private $plugins = array();
 	private $handlers = array();
 	private $server;

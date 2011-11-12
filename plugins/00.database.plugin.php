@@ -160,4 +160,9 @@ class database{
 	
 }
 
-$this->database = new database($this->db_path);
+// This will be executed when loading the  plugin
+class database_plugin{
+	function __construct(&$irc){
+		$irc->database = new database($irc->pluginConfig['db_path']);
+	}
+}
