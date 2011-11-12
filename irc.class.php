@@ -6,12 +6,13 @@ class IRC{
 	public $server_ssl = false;
 	public $nick = 'bot';
 	public $master = 'admin';
-	public $handlers = array();
 	public $plugindir = './plugins/';
 	public $debug = false;
 	public $startbotting = false;
 	public $reconnect = true;
 	public $db_path = './db.sqlite';
+	private $plugins = array();
+	private $handlers = array();
 	private $server;
 	
 	public function __construct($data)
@@ -190,7 +191,7 @@ class IRC{
 			$dir = scandir($this->plugindir);
 			foreach($dir as $file)
 			{
-				if($file != '.' && $file != '..' && preg_match('/\.plugin\.php$/',$file))
+				if($file != '.' && $file != '..' && preg_match('/\.(say)\.plugin\.php$/',$file, $pluginName))
 				{
 					//A plugin. Let's load it!
 					$thisfile = realpath($this->plugindir).'/'.basename($file);
@@ -200,6 +201,12 @@ class IRC{
 						//It's OK, will not disturb us :p
 						include($thisfile);
 						echo 'OK Loading:    '.$file."\n";
+						
+						//Instantiate the plugin's class and add it to the array
+						$pluginName = $pluginName[1] . '_plugin';
+						if (class_exists($pluginName)) {
+							$this->plugins[] = new $pluginName($this);
+						}
 					}else{
 						//Fuckin' coder! You wanted to kill me!
 						echo 'Error Loading: '.$file.' (syntax error)'."\n";
@@ -214,29 +221,23 @@ class IRC{
 		}
 	}
 	
-	private function runHandlers($msg,$channel,$who)
+	public function addHandler(&$object, $function, $regex){
+		$this->handlers[] = array('object' 		=> $object,
+								  'function' 	=> $function,
+								  'regex' 		=> $regex);
+	}
+	
+	private function runHandlers($msg, $channel, $who)
 	{
 		if($channel == $this->nick)
 		{
 			$channel = $who;
 		}
 		
-		//Build "Handlers for the user" list
-		$handlers = $this->handlers['*'];
-		$who2 = strtolower($who);
-		if($who == $this->master)
-		{
-			$handlers = array_merge($handlers,$this->handlers['admin']);
-		}
-		if($who2 != 'admin' && isset($this->handlers[$who2]))
-		{
-			$handlers = array_merge($handlers,$this->handlers[$who2]);
-		}
-
 		//Run the handlers
-		foreach($handlers as $function => $regex)
+		foreach($this->handlers as $handler)
 		{
-			if(preg_match($regex, $msg, $matches))
+			if (preg_match($handler['regex'], $msg, $matches))
 			{
 				//Clean the matches
 				foreach($matches as $key => $value) {
@@ -249,8 +250,8 @@ class IRC{
 				}
 				$matches = array_values($matches); 
 				//Call it!
-				echo 'Running '.$function."\n";
-				$function($this,$msg,$channel,$matches,$who);
+				echo 'Running '.get_class($handler['object']).' -> '.$handler['function']."\n";
+				$handler['object']->$handler['function']($this,$msg,$channel,$matches,$who);
 				break;
 			}
 		}
