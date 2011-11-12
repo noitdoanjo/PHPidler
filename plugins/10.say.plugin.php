@@ -5,11 +5,12 @@
 		.say <somebody> <something>
 */
 class say_plugin{
+
 	public function __construct(&$irc){	
-		$irc->addHandler($this, 'repeatOnChannel', '/^\.say (.*?) (.*)/s');	
+		$irc->addHandler($this, 'sayToChannel', '/^\.say (.*?) (.*)/s');	
 	}
 
-	public function repeatOnChannel(&$irc,$msg,$channel,$matches,$who) 
+	public function sayToChannel(&$irc,$msg,$channel,$matches,$who) 
 	{
 		if (($irc->userLevels->getLevel($who) >= USER_LEVEL_OWNER) or
 			(($irc->userLevels->getLevel($who) >= USER_LEVEL_ADMIN) and (strpos(strtolower($matches[1]), 'serv') === false))) {
