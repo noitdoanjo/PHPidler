@@ -12,7 +12,7 @@ class hex_plugin{
 	/**
 	 * Ascii to hex
 	 */
-	function hexToChannel(&$irc,$msg,$channel,$matches,$who) 
+	public function hexToChannel(&$irc,$msg,$channel,$matches,$who) 
 	{
 		$irc->sayToChannel($who . ': 0x' . bin2hex($matches[1]), $channel);
 	}
