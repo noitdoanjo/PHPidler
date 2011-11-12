@@ -47,7 +47,7 @@ class manageconfig_plugin{
 				if (!isset($property[$matches[1]])) {
 					$irc->database->insert($matches[1], $matches[2], 'manage-config');
 				}
-				$irc->$property=$value;
+				$irc->$matches[1]=$matches[2];
 			}
 		}
 	}
