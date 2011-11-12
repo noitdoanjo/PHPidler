@@ -51,7 +51,6 @@ function loadConfig(&$irc){
 		    $irc->$name=$value;
 		}
 	}
-    
 }
 
 
