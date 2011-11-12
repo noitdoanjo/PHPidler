@@ -4,9 +4,16 @@
 		.hex string
 */
 
-function hexToChannel(&$irc,$msg,$channel,$matches,$who) 
-{
-   	$irc->sayToChannel($who . ': 0x' . bin2hex($matches[1]), $channel);
+class hex_plugin{
+	public function __construct(&$irc){	
+		$irc->addHandler($this, 'hexToChannel', '/^\.hex (.*)/');
+	}
+	
+	/**
+	 * Ascii to hex
+	 */
+	function hexToChannel(&$irc,$msg,$channel,$matches,$who) 
+	{
+		$irc->sayToChannel($who . ': 0x' . bin2hex($matches[1]), $channel);
+	}
 }
-
-$this->handlers['*']['hexToChannel'] = '/^\.hex (.*)/';
