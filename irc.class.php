@@ -65,7 +65,7 @@ class IRC{
 	//Send Raw commands
 	public function sendCommand($cmd){
 		fwrite($this->server['SOCKET'], $cmd, strlen($cmd)); //sends the command to the server
-		if($this->debug) echo "[SEND] $cmd \n"; //displays it on the screen
+		if($this->debug) echo '[SEND] ' . $cmd; //displays it on the screen
 	}
 	
 	//Send messages to users/channels
@@ -109,7 +109,7 @@ class IRC{
 					if(empty($this->server['READ_BUFFER'])) continue;
 					
 					//display the recived data from the server
-					if($this->debug) echo "[RECIVE] ".$this->server['READ_BUFFER']."\n"; 
+					if($this->debug) echo "[RECIVE] ".$this->server['READ_BUFFER']; 
 					
 					//Now lets check to see if we have joined the server
 					//376 is the message number of the MOTD for the server
@@ -156,12 +156,19 @@ class IRC{
 						/*strrpos($this->server['READ_BUFFER'],':'.$this->master."!n")!==false &&*/
 						strrpos($this->server['READ_BUFFER'],'PRIVMSG')!==false)
 					{
-						//Someone said sth!
+						//Someone said something!
 						$msg = explode('PRIVMSG ',$this->server['READ_BUFFER'],2);
 						preg_match('/:(.*)!/',$msg[0],$matches);
 						$who = $matches[1];
 						list($channel,$msg) = explode(' :',$msg[1],2);
-						if($this->debug) echo '['.$who.' on '.$channel.']: '.$msg;
+						
+						//debug?
+						if($this->debug){
+							echo '['.$who.' on '.$channel.']: '.$msg;
+						}
+						//remove the \n in the end
+						$msg = substr($msg, 0, strlen($msg)-2);
+						
 						$this->runHandlers($msg,$channel,$who);
 					}
 					
