@@ -4,57 +4,71 @@
 		.ping <host>
 */
 
-/**
- * Pings a host
- *
- * @param string hostname
- * @return array
- */
-function ping($hostname){
-	exec('ping -c 3 -w 3 -n -q ' . escapeshellarg($hostname), $list);
-	return(array($list[2], $list[3], $list[4]));
-}
+class ping_plugin{
 
-/**
- * Checks if a ipv4 address is private
- *
- * @return boolean True if the ip is private, false otherwise
- * @param string $ip
- */
-function ipIsPrivate($ip){
-	$ip = sprintf('%u', ip2long($ip));
-	return ( ($ip >= sprintf('%u', ip2long('10.0.0.0')))    and ($ip <= sprintf('%u', ip2long('10.255.255.255'))) ) or
-		   ( ($ip >= sprintf('%u', ip2long('172.16.0.0')))  and ($ip <= sprintf('%u', ip2long('172.31.255.255'))) ) or
-		   ( ($ip >= sprintf('%u', ip2long('192.168.0.0'))) and ($ip <= sprintf('%u', ip2long('192.168.255.255'))) );
-}
+	public function __construct(&$irc){	
+		$irc->addHandler($this, 'pingHost', '/^\.ping (\S+)/');
+	}
 
-/**
- * Checks if a ipv4 address is loopback
- *
- * @return boolean True if the ip is loopback, false otherwise
- * @param string $ip
- */
-function ipIsLoopback($ip){
-	$ip = sprintf('%u', ip2long($ip));
-	return ( ($ip >= sprintf('%u', ip2long('127.0.0.0'))) and ($ip <= sprintf('%u', ip2long('127.255.255.255'))) );
-}
-
-
-function checkStatus(&$irc,$msg,$channel,$matches,$who)
-{
-	$ip = gethostbyname($matches[1]);
-	
-	if ( (!preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $ip)) and ($ip == $matches[1]) ) {
-		// It isn't a ip address and doesn't resolve as a domain name
-		$irc->sayToChannel('Unknown host ' . $ip, $channel);
-	}else if (! (ipIsPrivate($ip) or ipIsLoopback($ip)) ) {
-		$ping = ping($ip);
-		foreach ($ping as $thisline) {
-			$irc->sayToChannel($thisline, $channel);
+	/**
+	 * Pings a host
+	 *
+	 * @param string hostname
+	 * @return array
+	 */
+	private function ping($hostname){
+		exec('ping -c 3 -w 3 -n -q ' . escapeshellarg($hostname), $list, $returnVar);
+		if($returnVar === 0){
+			return(array($list[2], $list[3], $list[4]));
+		}else{
+			return false;
 		}
-	}else{
-		if($irc->debug) echo $ip . " is a local address!\n";
+	}
+	
+	/**
+	 * Checks if a ipv4 address is private
+	 *
+	 * @return boolean True if the ip is private, false otherwise
+	 * @param string $ip
+	 */
+	private function ipIsPrivate($ip){
+		$ip = sprintf('%u', ip2long($ip));
+		return ( ($ip >= sprintf('%u', ip2long('10.0.0.0')))    and ($ip <= sprintf('%u', ip2long('10.255.255.255'))) ) or
+			   ( ($ip >= sprintf('%u', ip2long('172.16.0.0')))  and ($ip <= sprintf('%u', ip2long('172.31.255.255'))) ) or
+			   ( ($ip >= sprintf('%u', ip2long('192.168.0.0'))) and ($ip <= sprintf('%u', ip2long('192.168.255.255'))) );
+	}
+	
+	/**
+	 * Checks if a ipv4 address is loopback
+	 *
+	 * @return boolean True if the ip is loopback, false otherwise
+	 * @param string $ip
+	 */
+	private function ipIsLoopback($ip){
+		$ip = sprintf('%u', ip2long($ip));
+		return ( ($ip >= sprintf('%u', ip2long('127.0.0.0'))) and ($ip <= sprintf('%u', ip2long('127.255.255.255'))) );
+	}
+	
+		
+	/**
+	 * Pings a host and shows the latency in a channel
+	 */
+	public function pingHost(&$irc,$msg,$channel,$matches,$who)
+	{
+		$ip = gethostbyname($matches[1]);
+		
+		if ( (!preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $ip)) and (($ip == $matches[1]) or ($ip === false)) ) {
+			// It isn't a ip address and doesn't resolve as a domain name
+			$irc->sayToChannel('Unknown host ' . $ip, $channel);
+		}else if (! ($this->ipIsPrivate($ip) or $this->ipIsLoopback($ip)) ) {
+			$ping = $this->ping($ip);
+			if($ping){
+				foreach ($ping as $thisline) {
+					$irc->sayToChannel($thisline, $channel);
+				}
+			}
+		}else{
+			if($irc->debug) echo $ip . " is a local address!\n";
+		}
 	}
 }
-
-$this->handlers['*']['checkStatus'] = '/^\.ping (\S+)/';
