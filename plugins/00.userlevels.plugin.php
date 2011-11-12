@@ -1,5 +1,4 @@
 <?php
-
 define('USER_LEVEL_BANNED',     10);
 define('USER_LEVEL_NONE',       20);
 define('USER_LEVEL_USER',       30);
@@ -33,5 +32,10 @@ class userLevels{
     }
 }
 
-$this->user_levels = new userLevels;
-$this->user_levels->setLevel($this->master, USER_LEVEL_OWNER);
+// This will be executed when loading the  plugin
+class userlevels_plugin{
+	function __construct(&$irc){
+		$irc->userLevels = new userLevels;
+		$irc->userLevels->setLevel($irc->master, USER_LEVEL_OWNER);
+	}
+}
