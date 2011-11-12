@@ -63,6 +63,7 @@ class ping_plugin{
 		}else if (! ($this->ipIsPrivate($ip) or $this->ipIsLoopback($ip)) ) {
 			$ping = $this->ping($ip);
 			if($ping){
+				$ping[0] = $who . ': ' . $ping[0];
 				foreach ($ping as $thisline) {
 					$irc->sayToChannel($thisline, $channel);
 				}
