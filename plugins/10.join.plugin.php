@@ -8,21 +8,24 @@
 		.p    <#channel>
 		.part <#channel>
 */
-
-$this->handlers['*']['joinChannel'] = '/^\.(j|join) #([A-Za-z0-9\._#+-]*)/';
-$this->handlers['*']['partChannel'] = '/^\.(p|part) #([A-Za-z0-9\._#+-]*)( (.+))?/';
-
-function joinChannel(&$irc,$msg,$channel,$matches,$who)
-{
-	if ($irc->user_levels->getLevel($who) >= USER_LEVEL_ADMIN) {
-		$irc->sendCommand("JOIN #{$matches[2]}\n\r");
+class join_plugin{
+	
+	public function __construct(&$irc){	
+		$irc->addHandler($this, 'joinChannel', '/^\.(j|join) #([A-Za-z0-9\._#+-]*)/');
+		$irc->addHandler($this, 'partChannel', '/^\.(p|part) #([A-Za-z0-9\._#+-]*)( (.+))?/');
 	}
-}
-
-
-function partChannel(&$irc,$msg,$channel,$matches,$who)
-{
-	if ($irc->user_levels->getLevel($who) >= USER_LEVEL_ADMIN) {
-		$irc->sendCommand('PART #' . $matches[2] . (isset($matches[3]) ? ' :' . $matches[3] : '') . "\n\r");
+	
+	public function joinChannel(&$irc,$msg,$channel,$matches,$who)
+	{
+		if ($irc->userLevels->getLevel($who) >= USER_LEVEL_ADMIN) {
+			$irc->sendCommand("JOIN #{$matches[2]}\n\r");
+		}
+	}
+	
+	public function partChannel(&$irc,$msg,$channel,$matches,$who)
+	{
+		if ($irc->userLevels->getLevel($who) >= USER_LEVEL_ADMIN) {
+			$irc->sendCommand('PART #' . $matches[2] . (isset($matches[3]) ? ' :' . $matches[3] : '') . "\n\r");
+		}
 	}
 }
