@@ -45,11 +45,11 @@ class htmltitle_plugin{
 			$irc->sayToChannel('Unknown host ' . $host, $channel);
 		}else if (! ($this->ipIsPrivate($ip) or $this->ipIsLoopback($ip)) ) {
 			if ($file = file_get_contents($matches[1])) {
-				if (preg_match('@<title>(.{1,256})</title>@', $file, $matches)) {
+				if (preg_match('@<title>(.{1,256}).*?</title>@', $file, $matches)) {
 					if (strlen($matches[1]) == 256) {
 						$matches[1].='...';
 					}
-					$irc->sayToChannel($matches[1], $channel);
+					$irc->sayToChannel(html_entity_decode($matches[1]), $channel);
 				}
 			}
 		}else{
