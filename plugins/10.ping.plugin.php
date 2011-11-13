@@ -59,7 +59,7 @@ class ping_plugin{
 		
 		if ( (!preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $ip)) and (($ip == $matches[1]) or ($ip === false)) ) {
 			// It isn't a ip address and doesn't resolve as a domain name
-			$irc->sayToChannel('Unknown host ' . $ip, $channel);
+			$irc->sayToChannel('Unknown host ' . $matches[1], $channel);
 		}else if (! ($this->ipIsPrivate($ip) or $this->ipIsLoopback($ip)) ) {
 			$ping = $this->ping($ip);
 			if($ping){
