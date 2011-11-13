@@ -69,9 +69,11 @@ class IRC{
 	}
 	
 	//Send messages to users/channels
-	public function sayToChannel($msg, $channel)
+	public function sayToChannel($msg, $channel, $allowSpecial = false)
 	{
-			echo "x";
+		if($allowSpecial == false){
+			$msg = str_replace(chr(1), '', $msg);
+		}
 		if (strpos($msg, "\n")  !== false) {
 			echo "a";
 			$msg = explode("\n", $msg);
@@ -79,7 +81,7 @@ class IRC{
 			echo "b";
 			foreach ($msg as $thisMsg) {
 			echo "c";
-				$this->sayToChannel($thisMsg, $channel);
+				$this->sayToChannel($thisMsg, $channel, true);
 			}
 		}else{
 			if(strlen($msg)>400)
@@ -97,7 +99,7 @@ class IRC{
 			
 			$this->sendCommand('PRIVMSG '.$channel.' :'.$msg."\r\n");
 			if (isset($msg2)) {
-				return $this->sayToChannel($msg2,$channel);
+				return $this->sayToChannel($msg2,$channel, true);
 			}
 		}
 	}
