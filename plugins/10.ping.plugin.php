@@ -17,11 +17,11 @@ class ping_plugin{
 	 * @return array
 	 */
 	private function ping($hostname){
-		exec('ping -c 3 -w 3 -n -q ' . escapeshellarg($hostname), $list, $returnVar);
-		if($returnVar === 0){
+		exec('ping -c 3 -w 3 -n -q ' . escapeshellarg($hostname), $list);
+		if(isset($list[4])){
 			return(array($list[2], $list[3], $list[4]));
 		}else{
-			return false;
+			return(array($list[2], $list[3]));
 		}
 	}
 	
