@@ -11,8 +11,6 @@ class ddg_plugin{
 
 	public function duckDuckGo(&$irc,$msg,$channel,$matches,$who) 
 	{
-		$userAgent = ini_get('user_agent');
-		ini_set('user_agent', 'PHPIdler ircbot https://github.com/seth--/PHPidler');
 		$page = file_get_contents('https://api.duckduckgo.com/?format=json&pretty=0&no_redirect=1&no_html=1&skip_disambig=1&q=' . urlencode($matches[1]));
 		$page = json_decode($page, true);
 		print_r($page);
@@ -61,7 +59,5 @@ class ddg_plugin{
 		}elseif (isset($page['Answer']) and ($page['Answer'] !== '')) {
 			$irc->sayToChannel($who . ': ' . $page['Answer'], $channel);
 		}
-		
-		ini_set('user_agent', $userAgent);
 	}
 }

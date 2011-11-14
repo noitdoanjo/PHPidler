@@ -28,6 +28,8 @@ class IRC{
 		if (!is_array($this->server_channels)) {
 			$this->server_channels = array($this->server_channels);
 		}
+		
+		ini_set('user_agent', 'PHPIdler ircbot https://github.com/seth--/PHPidler');
 	}
 	
 	/*
