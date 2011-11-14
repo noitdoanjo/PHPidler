@@ -57,7 +57,7 @@ class ddg_plugin{
 			}
 			
 		}elseif (isset($page['Answer']) and ($page['Answer'] !== '')) {
-			$irc->sayToChannel($who . ': ' . $page['Answer'], $channel);
+			$irc->sayToChannel($who . ': ' . strip_tags($page['Answer']), $channel);
 		}
 	}
 }
