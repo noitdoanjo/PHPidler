@@ -11,8 +11,8 @@
 class join_plugin{
 	
 	public function __construct(&$irc){	
-		$irc->addHandler($this, 'joinChannel', '/^\.(j|join) #([A-Za-z0-9\._#+-]*)/');
-		$irc->addHandler($this, 'partChannel', '/^\.(p|part) #([A-Za-z0-9\._#+-]*)( (.+))?/');
+		$irc->addHandler($this, 'joinChannel', '/^\.(j|join) #(\S+)/');
+		$irc->addHandler($this, 'partChannel', '/^\.(p|part) #(\S+)( (.+))?/');
 	}
 	
 	public function joinChannel(&$irc,$msg,$channel,$matches,$who)
