@@ -272,7 +272,6 @@ class IRC{
 				//Call it!
 				echo 'Running '.get_class($handler['object']).' -> '.$handler['function']."\n";
 				$handler['object']->$handler['function']($this,$msg,$channel,$matches,$who);
-				break;
 			}
 		}
 	}
