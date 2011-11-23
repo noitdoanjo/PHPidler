@@ -77,13 +77,10 @@ class IRC{
 			$msg = str_replace(chr(1), '', $msg);
 		}
 		if (strpos($msg, "\n")  !== false) {
-			echo "a";
 			$msg = explode("\n", $msg);
-			print_r($msg);
-			echo "b";
 			foreach ($msg as $thisMsg) {
-			echo "c";
 				$this->sayToChannel($thisMsg, $channel, true);
+				usleep(1000000);
 			}
 		}else{
 			if(strlen($msg)>400)
