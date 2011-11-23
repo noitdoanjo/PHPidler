@@ -31,5 +31,6 @@ $config = Array(
     'reconnect' => true,
     
     // Path to the sqlite database
-    'pluginConfig' => array('db_path' => './db.sqlite',),
+    'pluginConfig' => array('db_path' => './db.sqlite',
+                            'fortune_dir' => 'fortune')
 );
