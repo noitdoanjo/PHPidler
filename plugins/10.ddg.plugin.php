@@ -13,7 +13,6 @@ class ddg_plugin{
 	{
 		$page = file_get_contents('https://api.duckduckgo.com/?format=json&pretty=0&no_redirect=1&no_html=1&skip_disambig=1&q=' . urlencode($matches[1]));
 		$page = json_decode($page, true);
-		print_r($page);
 		
 		if (isset($page['AbstractText'])) {
 			if (($page['AbstractText'] !== '') or (isset($page['AbstractURL']) and ($page['AbstractURL'] !== ''))) {
