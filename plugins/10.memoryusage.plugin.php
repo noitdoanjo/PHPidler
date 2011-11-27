@@ -7,7 +7,7 @@
 class memoryusage_plugin{
 
 	public function __construct(&$irc){	
-		$irc->addHandler($this, 'memoryUsageToChannel', '/^\.memusage( real)?/');
+		$irc->addActionHandler($this, 'memoryUsageToChannel', '/^\.memusage( real)?/');
 	}
 	
 	private function byte_convert($bytes)

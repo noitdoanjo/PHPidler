@@ -6,7 +6,7 @@
 class bashquote_plugin{
 
 	public function __construct(&$irc){	
-		$irc->addHandler($this, 'quoteToChannel', '/^\.bashquote(?: (\d+))?/s');	
+		$irc->addActionHandler($this, 'quoteToChannel', '/^\.bashquote(?: (\d+))?/s');	
 	}
 
 	public function quoteToChannel(&$irc,$msg,$channel,$matches,$who) 

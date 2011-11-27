@@ -7,7 +7,7 @@
 class reversedns_plugin{
 
 	public function __construct(&$irc){	
-		$irc->addHandler($this, 'reverse', '/^\.reverse (.+)/');
+		$irc->addActionHandler($this, 'reverse', '/^\.reverse (.+)/');
 	}
 
 	public function reverse(&$irc,$msg,$channel,$matches,$who) 

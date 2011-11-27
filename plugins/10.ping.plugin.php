@@ -7,7 +7,7 @@
 class ping_plugin{
 
 	public function __construct(&$irc){	
-		$irc->addHandler($this, 'pingHost', '/^\.ping (\S+)/');
+		$irc->addActionHandler($this, 'pingHost', '/^\.ping (\S+)/');
 	}
 
 	/**

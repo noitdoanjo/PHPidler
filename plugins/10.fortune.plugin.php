@@ -9,8 +9,8 @@
 class fortune_plugin{
 
 	public function __construct(&$irc){	
-		$irc->addHandler($this, 'listFortunes', '/^\.fortune list/');	
-		$irc->addHandler($this, 'showFortune', '/^\.fortune(?: (.+))?/');	
+		$irc->addActionHandler($this, 'listFortunes', '/^\.fortune list/');	
+		$irc->addActionHandler($this, 'showFortune', '/^\.fortune(?: (.+))?/');	
 	}
 
 	public function listFortunes(&$irc,$msg,$channel,$matches,$who)

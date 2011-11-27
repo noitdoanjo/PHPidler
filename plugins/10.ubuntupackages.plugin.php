@@ -7,7 +7,7 @@
 class ubuntupackages_plugin{
 
 	public function __construct(&$irc){	
-		$irc->addHandler($this, 'ubuntuSearchPackage', '/^\.ubuntu (.*)/');
+		$irc->addActionHandler($this, 'ubuntuSearchPackage', '/^\.ubuntu (.*)/');
 	}
 	
 	public function ubuntuSearchPackage(&$irc,$msg,$channel,$matches,$who) 

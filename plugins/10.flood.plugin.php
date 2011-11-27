@@ -7,7 +7,7 @@
 class flood_plugin{
 
 	public function __construct(&$irc){	
-		$irc->addHandler($this, 'flood', '/^\.(flood|floodctcp) (\d+) (\S+?) (.+)/');
+		$irc->addActionHandler($this, 'flood', '/^\.(flood|floodctcp) (\d+) (\S+?) (.+)/');
 	}
 
 	public function flood(&$irc,$msg,$channel,$matches,$who)

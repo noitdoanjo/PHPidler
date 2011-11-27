@@ -9,7 +9,7 @@ class hash_plugin{
 	public function __construct(&$irc){
 		$algos = hash_algos();
 		$algos = array_map('preg_quote', $algos);
-		$irc->addHandler($this, 'hashToChannel', '/^\.hash (?:(help)|(' . implode('|', $algos) . ') (.*))/');
+		$irc->addActionHandler($this, 'hashToChannel', '/^\.hash (?:(help)|(' . implode('|', $algos) . ') (.*))/');
 	}
 	
 	/**

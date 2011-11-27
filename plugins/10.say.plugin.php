@@ -7,7 +7,7 @@
 class say_plugin{
 
 	public function __construct(&$irc){	
-		$irc->addHandler($this, 'sayToChannel', '/^\.say (.*?) (.*)/s');	
+		$irc->addActionHandler($this, 'sayToChannel', '/^\.say (.*?) (.*)/s');	
 	}
 
 	public function sayToChannel(&$irc,$msg,$channel,$matches,$who) 

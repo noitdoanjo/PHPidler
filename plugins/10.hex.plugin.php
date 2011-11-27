@@ -7,7 +7,7 @@
 class hex_plugin{
 	
 	public function __construct(&$irc){	
-		$irc->addHandler($this, 'hexToChannel', '/^\.hex (.*)/');
+		$irc->addActionHandler($this, 'hexToChannel', '/^\.hex (.*)/');
 	}
 	
 	/**

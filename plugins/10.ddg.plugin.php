@@ -6,7 +6,7 @@
 class ddg_plugin{
 
 	public function __construct(&$irc){	
-		$irc->addHandler($this, 'duckDuckGo', '/^\.ddg (.+)/s');	
+		$irc->addActionHandler($this, 'duckDuckGo', '/^\.ddg (.+)/s');	
 	}
 
 	public function duckDuckGo(&$irc,$msg,$channel,$matches,$who) 

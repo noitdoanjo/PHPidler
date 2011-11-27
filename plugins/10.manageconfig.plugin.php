@@ -11,7 +11,7 @@ class manageconfig_plugin{
 
 	public function __construct(&$irc){
 		$this->loadConfig($irc);
-		$irc->addHandler($this, 'manageConfig', '/^\.config (set (\S+) (.+)|get (.+)|list)/');
+		$irc->addActionHandler($this, 'manageConfig', '/^\.config (set (\S+) (.+)|get (.+)|list)/');
 	}
 	
 	public function manageConfig(&$irc,$msg,$channel,$matches,$who) 
