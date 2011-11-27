@@ -301,7 +301,7 @@ class IRC{
 				$this->timeHandlers[$key]['lastRun'] = time();
 				
 				echo 'Running '.get_class($handler['object']).' -> '.$handler['function']."\n";
-				$handler['object']->$handler['function']();
+				$handler['object']->$handler['function'](&$irc);
 			}
 		}
 	}
