@@ -71,7 +71,7 @@ class database{
 	 *
 	 * @param string $name The name of the new option
 	 * @param mixed $value The value of the new option
-	 * @param string|null $plugin The name of the plugin. If null, it will be ignored
+	 * @param string $plugin The name of the plugin
 	 * @return bool Returns TRUE on success or FALSE on failure.
 	 */
 	public function insert($name, $value, $plugin = '') {
