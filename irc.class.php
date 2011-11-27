@@ -12,7 +12,8 @@ class IRC{
 	public $reconnect = true;
 	public $pluginConfig = array();
 	private $plugins = array();
-	private $handlers = array();
+	private $actionHandlers = array();
+	private $timeHandlers = array();
 	private $server;
 	
 	public function __construct($data)
@@ -109,6 +110,7 @@ class IRC{
 			$this->server = array(); //we will use an array to store all the server data.
 			//Open the socket connection to the IRC server
 			$this->server['SOCKET'] = fsockopen(($this->server_ssl ? 'ssl://' : '') . $this->server_host, $this->server_port, $errno, $errstr, 2);
+			socket_set_blocking($this->server['SOCKET'], false); 
 			if($this->server['SOCKET'])
 			{
 				//Ok, we have connected to the server, now we have to send the login commands.
@@ -117,7 +119,12 @@ class IRC{
 				$this->sendCommand("USER $this->nick USING PHP IRC\n\r"); //sends the user must have 4 paramters
 				while(!@feof($server['SOCKET'])) //while we are connected to the server
 				{
-					//get a line of data from svr
+					//If we are using plugins, run the time handlers
+					if ($this->startbotting == true ) {
+						$this->runTimeHandlers();
+					}
+					
+					//get a line of data from server
 					$this->server['READ_BUFFER'] = fgets($this->server['SOCKET'], 1024); 
 					if(empty($this->server['READ_BUFFER'])) continue;
 					
@@ -163,8 +170,9 @@ class IRC{
 							echo 'Parting '.$matches[1];
 						}
 					}									
-
-					//If we are using plugins and somebody say something, we want to run the handlers
+					
+					
+					//If we are using plugins and somebody say something, we want to run the action handlers
 					if($this->startbotting == true &&
 						/*strrpos($this->server['READ_BUFFER'],':'.$this->master."!n")!==false &&*/
 						strrpos($this->server['READ_BUFFER'],'PRIVMSG')!==false)
@@ -182,7 +190,7 @@ class IRC{
 						//remove the \n in the end
 						$msg = substr($msg, 0, strlen($msg)-2);
 						
-						$this->runHandlers($msg,$channel,$who);
+						$this->runActionHandlers($msg,$channel,$who);
 					}
 					
 					if(strrpos($this->server['READ_BUFFER'],'Closing Link')!==false)
@@ -241,13 +249,20 @@ class IRC{
 		}
 	}
 	
-	public function addHandler(&$object, $function, $regex){
-		$this->handlers[] = array('object' 		=> $object,
-								  'function' 	=> $function,
-								  'regex' 		=> $regex);
+	public function addActionHandler(&$object, $function, $regex){
+		$this->actionHandlers[] = array('object' 		=> $object,
+									    'function'  	=> $function,
+							      	    'regex' 		=> $regex);
 	}
 	
-	private function runHandlers($msg, $channel, $who)
+	public function addTimeHandler(&$object, $function, $seconds){
+		$this->timeHandlers[] = array('object' 		=> $object,
+									  'function'	=> $function,
+							      	  'seconds' 	=> $seconds,
+									  'lastRun'		=> time());
+	}
+	
+	private function runActionHandlers($msg, $channel, $who)
 	{
 		if($channel == $this->nick)
 		{
@@ -255,7 +270,7 @@ class IRC{
 		}
 		
 		//Run the handlers
-		foreach($this->handlers as $handler)
+		foreach($this->actionHandlers as $handler)
 		{
 			if (preg_match($handler['regex'], $msg, $matches))
 			{
@@ -272,6 +287,21 @@ class IRC{
 				//Call it!
 				echo 'Running '.get_class($handler['object']).' -> '.$handler['function']."\n";
 				$handler['object']->$handler['function']($this,$msg,$channel,$matches,$who);
+			}
+		}
+	}
+	
+	private function runTimeHandlers()
+	{		
+		//Run the handlers
+		foreach($this->timeHandlers as $key => $handler)
+		{
+			if (time() >= ($handler['lastRun'] + $handler['seconds']))
+			{
+				$this->timeHandlers[$key]['lastRun'] = time();
+				
+				echo 'Running '.get_class($handler['object']).' -> '.$handler['function']."\n";
+				$handler['object']->$handler['function']();
 			}
 		}
 	}
