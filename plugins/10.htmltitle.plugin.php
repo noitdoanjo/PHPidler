@@ -8,7 +8,7 @@
 class htmltitle_plugin{
 
 	public function __construct(&$irc){	
-		$irc->addHandler($this, 'titleToChannel', '@^(?:.* )?(https?://\S*)@');	
+		$irc->addHandler($this, 'titleToChannel', '@(https?://\S*)@');	
 	}
 	
 	/**
