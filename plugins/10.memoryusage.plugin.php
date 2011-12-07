@@ -28,10 +28,8 @@ class memoryusage_plugin{
 		if ($irc->userLevels->getLevel($who) >= USER_LEVEL_ADMIN) {
 			if($matches[1]=='real')
 			{
-				$pid = getmypid();
-				exec("ps -eo%mem,rss,pid | grep $pid", $output);
-				$output = explode("  ", $output[0]);
-				$mem =  $output[1] * 1024;
+				exec('ps -orss -p ' . getmypid(), $mem);
+				$mem = $mem[1] * 1024;
 			}else{
 				$mem = memory_get_usage(); 
 			}
