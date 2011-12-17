@@ -26,7 +26,7 @@ class memoryusage_plugin{
 	public function memoryUsageToChannel(&$irc,$msg,$channel,$matches,$who)
 	{
 		if ($irc->userLevels->getLevel($who) >= USER_LEVEL_ADMIN) {
-			if(isset($matches[1]) && $matches[1]=='real')
+			if(isset($matches[1]))
 			{
 				exec('ps -orss -p ' . getmypid(), $mem);
 				$mem = $mem[1] * 1024;
