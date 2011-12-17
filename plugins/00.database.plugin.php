@@ -5,13 +5,15 @@
  
 class database{
     private $handle = false;
-    
+    private $debug = false;
+	
 	/**
 	 * Creates a PDO instance and, if needed, creates the file and the table
 	 *
 	 * @param string $dbPath The path of the database file
 	 */
-	public function __construct($dbPath) {
+	public function __construct($dbPath, &$debug) {
+		$this->debug = &$debug;
         try{
             // Connect to the database
             $this->handle = new PDO('sqlite:' . $dbPath);
@@ -20,7 +22,7 @@ class database{
         }
         
         catch(PDOException $e) {
-            if ($irc->debug) {
+            if ($this->debug) {
                 echo $e->getMessage();
             }
         }
@@ -60,7 +62,7 @@ class database{
 		}
         
         catch(PDOException $e) {
-            if ($irc->debug) {
+            if ($this->debug) {
                 echo $e->getMessage();
             }
         }
@@ -81,7 +83,7 @@ class database{
         }
         
         catch(PDOException $e) {
-            if ($irc->debug) {
+            if ($this->debug) {
                 echo $e->getMessage();
             }
         }
@@ -117,7 +119,7 @@ class database{
 		}
         
         catch(PDOException $e) {
-            if ($irc->debug) {   
+            if ($this->debug) {   
                 echo $e->getMessage();
             }
         }
@@ -152,7 +154,7 @@ class database{
         }
         
         catch(PDOException $e) {
-            if ($irc->debug) {
+            if ($this->debug) {
                 echo $e->getMessage();
             }
         }
@@ -163,6 +165,6 @@ class database{
 // This will be executed when loading the  plugin
 class database_plugin{
 	function __construct(&$irc){
-		$irc->database = new database($irc->pluginConfig['db_path']);
+		$irc->database = new database($irc->pluginConfig['db_path'], $irc->debug);
 	}
 }
