@@ -2,7 +2,23 @@
 /*
  * Adds sqlite wrappers
  */
- 
+
+class pdoErrorHandler{
+	private $debug = false;
+	
+	public function __construct(&$debug) {
+		$this->debug = &$debug;
+	}
+	
+	public function __call($name, $arguments)
+    {
+		if ($this->debug) {
+			echo 'Tried to call ' . $name . '() and it failed. Are you sure that pdo_sqlite is installed?'."\n";
+		}
+		return $this;
+    }
+} 
+
 class database{
     private $handle = false;
     private $debug = false;
@@ -14,19 +30,29 @@ class database{
 	 */
 	public function __construct($dbPath, &$debug) {
 		$this->debug = &$debug;
-        try{
-            // Connect to the database
-            $this->handle = new PDO('sqlite:' . $dbPath);
-            // Create the table
-            $this->handle->exec('CREATE TABLE IF NOT EXISTS options (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, plugin STRING, name STRING, value STRING)');
-        }
-        
-        catch(PDOException $e) {
-            if ($this->debug) {
-                echo $e->getMessage();
-            }
-        }
+		if (!extension_loaded('pdo_sqlite')) {
+			// We failed to initialize PDO, show a warning
+			echo '******************************************'."\n";
+			echo '**               WARNING                **'."\n";
+			echo '** RUNNING WITHOUT PDO WILL BREAK STUFF **'."\n";
+			echo '******************************************'."\n";
+			$this->handle = new pdoErrorHandler($debug);
+		} else {
+			try{
+				// Connect to the database
+				$this->handle = new PDO('sqlite:' . $dbPath);
+				// Create the table
+				$this->handle->exec('CREATE TABLE IF NOT EXISTS options (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, plugin STRING, name STRING, value STRING)');
+			}
+			
+			catch(PDOException $e) {
+				if ($this->debug) {
+					echo $e->getMessage();
+				}
+			}
+		}
     }
+	
 
     /**
 	 * Does a select query
@@ -36,19 +62,19 @@ class database{
 	 * @return array
 	 */
     public function get($name = null, $plugin = null) {
-			$sql = 'SELECT name,value FROM options WHERE 1';
-			$parameters = array();
-			
-			if(!is_null($name)){
-                $sql.= ' AND name = ?';
-                $parameters[] = $name;
-            }
-			
-			if(!is_null($plugin)){
-                $sql.= ' AND plugin = ?';
-                $parameters[] = $plugin;
-            }
-			
+		$sql = 'SELECT name,value FROM options WHERE 1';
+		$parameters = array();
+		
+		if(!is_null($name)){
+			$sql.= ' AND name = ?';
+			$parameters[] = $name;
+		}
+		
+		if(!is_null($plugin)){
+			$sql.= ' AND plugin = ?';
+			$parameters[] = $plugin;
+		}
+		
         try{
 			$tmp = $this->handle->prepare($sql);
 			$tmp->execute($parameters);
