@@ -1,6 +1,8 @@
 #!/usr/bin/php
 <?php
 
+chdir(dirname(__FILE__));
+
 //Load things
 require('./config.php');
 require('./irc.class.php');
