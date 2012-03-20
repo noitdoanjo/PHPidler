@@ -118,7 +118,7 @@ class IRC{
 				$this->sendCommand("PASS NOPASS\n\r"); //Sends the password not needed for most servers
 				$this->sendCommand("NICK $this->nick\n\r"); //sends the nickname
 				$this->sendCommand("USER $this->nick USING PHP IRC\n\r"); //sends the user must have 4 paramters
-				while(!@feof($server['SOCKET'])) //while we are connected to the server
+				while(!@feof($this->server['SOCKET'])) //while we are connected to the server
 				{
 					//If we are using plugins, run the time handlers
 					if ($this->startbotting == true ) {
@@ -214,8 +214,8 @@ class IRC{
 					
 					if(strrpos($this->server['READ_BUFFER'],'Closing Link')!==false)
 					{
-						@fclose($server['SOCKET']);
-						unset($server['SOCKET']);
+						@fclose($this->server['SOCKET']);
+						unset($this->server['SOCKET']);
 						//Just continue running the bot but no more loop!
 						break;
 					}
