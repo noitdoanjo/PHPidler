@@ -6,6 +6,7 @@ class IRC{
 	public $server_ssl = false;
 	public $nick = 'bot';
 	public $master = 'admin';
+	public $nickservPassword = '';
 	public $plugindir = './plugins/';
 	public $debug = false;
 	public $startbotting = false;
@@ -131,16 +132,34 @@ class IRC{
 					//display the recived data from the server
 					if($this->debug) echo "[RECIVE] ".$this->server['READ_BUFFER']; 
 					
+					//Get the command number (RFC 1459, chapter 6)
+					preg_match('@^(?:\:.*?)? (.*?) @', $this->server['READ_BUFFER'], $matches);
+					$this->server['command'] = $matches[1];
+					
 					//Now lets check to see if we have joined the server
-					//376 is the message number of the MOTD for the server
+					//376 is the message number of end of MOTD
 					//(The last thing displayed after a successful connection)
-					if(strpos($this->server['READ_BUFFER'], "376")) 
+					if($this->server['command'] == '376') 
 					{
-						//If we have joined the server
+						
+						//Identify with nickserv
+						if($this->nickservPassword){
+							$this->sayToChannel('identify ' . $this->nickservPassword, 'nickserv');
+						}
+						
+						//Join the channels
 						foreach ($this->server_channels as $chan){
-							$this->sendCommand("JOIN {$chan}\n\r"); //Join the chanel
+							$this->sendCommand("JOIN {$chan}\n\r"); 
 						}
 					}
+					
+					//If a channel has +r and we try to join before nickserv accepts our password, try again
+					if($this->server['command'] == '477'){
+						preg_match('@ (#.*?) :Cannot @', $this->server['READ_BUFFER'], $channelName);
+						$this->sendCommand("JOIN {$channelName[1]}\n\r"); 
+						unset($channelName);
+					}
+					
 					
 					//If the server has sent the ping command
 					if(substr($this->server['READ_BUFFER'], 0, 6) == "PING :") 

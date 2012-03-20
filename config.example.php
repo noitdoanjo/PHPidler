@@ -30,6 +30,9 @@ $config = Array(
     // Try to reconnect if something fails
     'reconnect' => true,
     
+    //Nickserv password
+    'nickservPassword' => '',
+    
     // Path to the sqlite database
     'pluginConfig' => array('db_path' => './db.sqlite',
                             'fortune_dir' => 'fortune')
