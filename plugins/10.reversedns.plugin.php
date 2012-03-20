@@ -3,7 +3,7 @@
 	Commands:
 		.reverse <domain>
 */
-//To do: sort results fron right to left (first tld, then domain, then subdomain...)
+//To do: sort results from right to left (first tld, then domain, then subdomain...)
 class reversedns_plugin{
 
 	public function __construct(&$irc){	
