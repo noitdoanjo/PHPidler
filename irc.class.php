@@ -160,12 +160,11 @@ class IRC{
 						unset($channelName);
 					}
 					
-					
 					//If the server has sent the ping command
-					if(substr($this->server['READ_BUFFER'], 0, 6) == "PING :") 
+					if($this->server['command'] == 'PING') 
 					{
 						//Reply with pong
-						$this->sendCommand("PONG :".substr($this->server['READ_BUFFER'], 6)."\n\r"); 
+						$this->sendCommand('PONG :' . substr($this->server['READ_BUFFER'], 6) . "\n\r"); 
 						//As you can see i dont have it reply with just "PONG"
 						//It sends PONG and the data recived after the "PING" text on that recived line
 						//Reason being is some irc servers have a "No Spoof" 
@@ -174,19 +173,20 @@ class IRC{
 					}
 					
 					//Handle own joins and parts
-					if (preg_match('@^:'.preg_quote($this->nick, '@').'!.+ JOIN :(.+)$@', $this->server['READ_BUFFER'], $matches))
+					if (($this->server['command'] == 'JOIN') and preg_match('@^:'.preg_quote($this->nick, '@').'!.+ JOIN (.+)$@', $this->server['READ_BUFFER'], $matches))
 					{
 						//This is a join. Add the channel to the list
 						$this->addChannels($matches[1]);
 						if ($this->debug) {
-							echo 'Joining '.$matches[1];
+							echo 'Joining '.$matches[1]."\n";
 						}
-					}else if (preg_match('@^:'.preg_quote($this->nick, '@').'!.+ PART (.+)$@', $this->server['READ_BUFFER'], $matches))
+						
+					}else if (($this->server['command'] == 'PART') and preg_match('@^:'.preg_quote($this->nick, '@').'!.+ PART (.+)$@', $this->server['READ_BUFFER'], $matches))
 					{
 						//This is a part. Remove the channel from the list
 						$this->removeChannels($matches[1]);
 						if ($this->debug) {
-							echo 'Parting '.$matches[1];
+							echo 'Parting '.$matches[1]."\n";
 						}
 					}									
 					
