@@ -1,13 +1,13 @@
 <?php
 class IRC{
-	public $server_host = "irc.freenode.net";
-	public $server_channels = "#randomchannel";
-	public $server_port = 6667;
-	public $server_ssl = false;
+	public $serverHost = "irc.freenode.net";
+	public $serverChannels = "#randomchannel";
+	public $serverPort = 6667;
+	public $serverSsl = false;
 	public $nick = 'bot';
 	public $master = 'admin';
 	public $nickservPassword = '';
-	public $plugindir = './plugins/';
+	public $pluginDir = './plugins/';
 	public $debug = false;
 	public $startbotting = false;
 	public $reconnect = true;
@@ -27,8 +27,8 @@ class IRC{
 			}
 		}
 		
-		if (!is_array($this->server_channels)) {
-			$this->server_channels = array($this->server_channels);
+		if (!is_array($this->serverChannels)) {
+			$this->serverChannels = array($this->serverChannels);
 		}
 		
 		ini_set('user_agent', 'PHPIdler ircbot https://github.com/seth--/PHPidler');
@@ -40,7 +40,7 @@ class IRC{
 	 * @param mixed $chan A string or array of strings with the name(s) of the joined channel(s) 
 	 */
 	public function addChannels($chan){
-		array_push($this->server_channels, $chan);
+		array_push($this->serverChannels, $chan);
 	}
 	
 	/*
@@ -50,16 +50,16 @@ class IRC{
 	 */
 	public function removeChannels($chan){
 		if (!is_array($chan)) {
-			foreach ($this->server_channels as $key => $this_channel){
+			foreach ($this->serverChannels as $key => $this_channel){
 				if($this_channel == $chan){
-					unset($this->server_channels[$key]);
+					unset($this->serverChannels[$key]);
 				}
 			}
 		}else{
-			foreach ($this->server_channels as $key => $this_channel){
+			foreach ($this->serverChannels as $key => $this_channel){
 				foreach ($chan as $this_chan){
 					if($this_channel == $this_chan){
-						unset($this->server_channels[$key]);
+						unset($this->serverChannels[$key]);
 					}
 				}
 			}
@@ -110,7 +110,7 @@ class IRC{
 		while($this->reconnect){
 			$this->server = array(); //we will use an array to store all the server data.
 			//Open the socket connection to the IRC server
-			$this->server['SOCKET'] = fsockopen(($this->server_ssl ? 'ssl://' : '') . $this->server_host, $this->server_port, $errno, $errstr, 2);
+			$this->server['SOCKET'] = fsockopen(($this->serverSsl ? 'ssl://' : '') . $this->serverHost, $this->serverPort, $errno, $errstr, 2);
 			socket_set_blocking($this->server['SOCKET'], false); 
 			if($this->server['SOCKET'])
 			{
@@ -148,7 +148,7 @@ class IRC{
 						}
 						
 						//Join the channels
-						foreach ($this->server_channels as $chan){
+						foreach ($this->serverChannels as $chan){
 							$this->sendCommand("JOIN {$chan}\n\r"); 
 						}
 					}
@@ -232,16 +232,16 @@ class IRC{
 
 	public function initBot()
 	{
-		if(file_exists($this->plugindir))
+		if(file_exists($this->pluginDir))
 		{
 			//Batch loading!
-			$dir = scandir($this->plugindir);
+			$dir = scandir($this->pluginDir);
 			foreach($dir as $file)
 			{
 				if($file != '.' && $file != '..' && preg_match('/\.(.*?)\.plugin\.php$/',$file, $pluginName))
 				{
 					//A plugin. Let's load it!
-					$thisfile = realpath($this->plugindir).'/'.basename($file);
+					$thisfile = realpath($this->pluginDir).'/'.basename($file);
 					$syntaxcheck = shell_exec('php -l '.escapeshellarg($thisfile));
 					if(strpos($syntaxcheck,'No syntax errors detected')!==false)
 					{
