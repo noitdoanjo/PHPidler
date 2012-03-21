@@ -133,7 +133,7 @@ class IRC{
 					if($this->debug) echo "[RECIVE] ".$this->server['READ_BUFFER']; 
 					
 					//Get the command number (RFC 1459, chapter 6)
-					preg_match('@^(?:\:.*?)? (.*?) @', $this->server['READ_BUFFER'], $matches);
+					preg_match('@^(?:\:.*? )?(.*?) @', $this->server['READ_BUFFER'], $matches);
 					$this->server['command'] = $matches[1];
 					
 					//Now lets check to see if we have joined the server
