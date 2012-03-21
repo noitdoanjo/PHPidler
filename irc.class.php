@@ -160,7 +160,7 @@ class IRC{
 						
 						case 'PING':
 						//Reply with pong
-							$this->sendCommand('PONG :' . substr($this->server['READ_BUFFER'], 6) . "\n\r"); 
+							$this->sendCommand('PONG :' . substr($this->server['READ_BUFFER'], 6)); 
 							//As you can see i dont have it reply with just "PONG"
 							//It sends PONG and the data recived after the "PING" text on that recived line
 							//Reason being is some irc servers have a "No Spoof" feature that sends a key after the PING
