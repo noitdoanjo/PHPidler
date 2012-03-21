@@ -1,5 +1,10 @@
 IRC bot in PHP
 
-Configure it in config.php (there is a template in config.example.php) and run bot.php [config-file.php]
-You need php5-cli, php5-curl and php5-sqlite
+You need php5-cli, php5-curl and php5-sqlite (only for the database plugin)
+
+Configure it in config.php (there is a template in config.example.php)
+Then run bot.php [config-file.php]
+
+To get a list of commands run grep -R '^\s*\.' plugins
+
 Based on turl's code https://github.com/turl
