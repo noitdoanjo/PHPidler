@@ -1,10 +1,15 @@
 #!/usr/bin/php
 <?php
 
-chdir(dirname(__FILE__));
 
 //Load things
-require('./config.php');
+if (isset($argv[1])){
+    require($argv[1]); 
+    chdir(dirname(__FILE__));
+}else{
+    chdir(dirname(__FILE__));
+    require('./config.php');
+}
 require('./irc.class.php');
 if(!isset($config)) die('No configuration!'."\n");
 
