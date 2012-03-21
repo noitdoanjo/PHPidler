@@ -136,65 +136,66 @@ class IRC{
 					preg_match('@^(?:\:.*? )?(.*?) @', $this->server['READ_BUFFER'], $matches);
 					$this->server['command'] = $matches[1];
 					
-					//Now lets check to see if we have joined the server
-					//376 is the message number of end of MOTD
-					//(The last thing displayed after a successful connection)
-					if($this->server['command'] == '376') 
-					{
+					switch ($this->server['command']){
 						
-						//Identify with nickserv
-						if($this->nickservPassword){
-							$this->sayToChannel('identify ' . $this->nickservPassword, 'nickserv');
-						}
+						case '376':
+						//376: End of motd
+							//Identify with nickserv
+							if($this->nickservPassword){
+								$this->sayToChannel('identify ' . $this->nickservPassword, 'nickserv');
+							}
+							
+							//Join the channels
+							foreach ($this->serverChannels as $chan){
+								$this->sendCommand("JOIN {$chan}\n\r"); 
+							}
+							break;
 						
-						//Join the channels
-						foreach ($this->serverChannels as $chan){
-							$this->sendCommand("JOIN {$chan}\n\r"); 
-						}
-					}
-					
-					//If a channel has +r and we try to join before nickserv accepts our password, try again
-					if($this->server['command'] == '477'){
-						preg_match('@ (#.*?) :Cannot @', $this->server['READ_BUFFER'], $channelName);
-						$this->sendCommand("JOIN {$channelName[1]}\n\r"); 
-						unset($channelName);
-					}
-					
-					//If the server has sent the ping command
-					if($this->server['command'] == 'PING') 
-					{
+						case '477':
+						//477: You need a registered nick to join that channel.
+						//If a channel has +r and we try to join before nickserv accepts our password, try again
+							preg_match('@ (#.*?) :Cannot @', $this->server['READ_BUFFER'], $matches);
+							$this->sendCommand("JOIN {$matches[1]}\n\r"); 
+							break;
+						
+						case 'PING':
 						//Reply with pong
-						$this->sendCommand('PONG :' . substr($this->server['READ_BUFFER'], 6) . "\n\r"); 
-						//As you can see i dont have it reply with just "PONG"
-						//It sends PONG and the data recived after the "PING" text on that recived line
-						//Reason being is some irc servers have a "No Spoof" 
-						//feature that sends a key after the PING
-						//Command that must be replied with PONG and the same key sent.
-					}
-					
-					//Handle own joins and parts
-					if (($this->server['command'] == 'JOIN') and preg_match('@^:'.preg_quote($this->nick, '@').'!.+ JOIN (.+)$@', $this->server['READ_BUFFER'], $matches))
-					{
-						//This is a join. Add the channel to the list
-						$this->addChannels($matches[1]);
-						if ($this->debug) {
-							echo 'Joining '.$matches[1]."\n";
-						}
+							$this->sendCommand('PONG :' . substr($this->server['READ_BUFFER'], 6) . "\n\r"); 
+							//As you can see i dont have it reply with just "PONG"
+							//It sends PONG and the data recived after the "PING" text on that recived line
+							//Reason being is some irc servers have a "No Spoof" feature that sends a key after the PING
+							//command that must be replied with PONG and the same key sent.
+							break;
 						
-					}else if (($this->server['command'] == 'PART') and preg_match('@^:'.preg_quote($this->nick, '@').'!.+ PART (.+)$@', $this->server['READ_BUFFER'], $matches))
-					{
-						//This is a part. Remove the channel from the list
-						$this->removeChannels($matches[1]);
-						if ($this->debug) {
-							echo 'Parting '.$matches[1]."\n";
-						}
-					}									
+						case 'JOIN':
+						//Handle own joins
+							if (preg_match('@^:'.preg_quote($this->nick, '@').'!.+ JOIN (.+)$@', $this->server['READ_BUFFER'], $matches))
+							{
+								//This is a join. Add the channel to the list
+								$this->addChannels($matches[1]);
+								if ($this->debug) {
+									echo 'Joining '.$matches[1]."\n";
+								}
+								
+							}
+							break;
+						
+						case 'PART':
+						//Handle own parts
+							if (preg_match('@^:'.preg_quote($this->nick, '@').'!.+ PART (.+)$@', $this->server['READ_BUFFER'], $matches))
+							{
+								//This is a part. Remove the channel from the list
+								$this->removeChannels($matches[1]);
+								if ($this->debug) {
+									echo 'Parting '.$matches[1]."\n";
+								}
+							}
+							break;
+					}
 					
 					
 					//If we are using plugins and somebody say something, we want to run the action handlers
-					if($this->startbotting == true &&
-						/*strrpos($this->server['READ_BUFFER'],':'.$this->master."!n")!==false &&*/
-						strrpos($this->server['READ_BUFFER'],'PRIVMSG')!==false)
+					if (($this->startbotting == true) and ($this->server['command'] == 'PRIVMSG'))
 					{
 						//Someone said something!
 						$msg = explode('PRIVMSG ',$this->server['READ_BUFFER'],2);
