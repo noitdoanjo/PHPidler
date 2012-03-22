@@ -14,12 +14,7 @@ class hashsearch_plugin{
 	 * Searches for the plaintext of a given md5 hash
 	 */
 	public function searchMd5(&$irc,$msg,$channel,$matches,$who) 
-	{
-		if($who != 'seth--'){
-			$irc->sayToChannel($who . ': CHUPALA', $channel);
-			return;
-		}
-		
+	{		
 		$matches[1] = strtolower($matches[1]);
 		if ($html = file_get_contents('http://www.tobtu.com/md5.php?h=' . $matches[1])) {
 			if (preg_match('@' . $matches[1] . '\:([^\:]+)[\:|\n](.*)$@m', $html, $password)){
