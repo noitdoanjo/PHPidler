@@ -130,8 +130,10 @@ class IRC{
 					
 					//get a line of data from server
 					$this->server['READ_BUFFER'] = fgets($this->server['SOCKET'], 1024); 
-					if(empty($this->server['READ_BUFFER'])) continue;
-					
+					if(empty($this->server['READ_BUFFER'])){
+						if($this->debug) echo "Received no data\n"; 
+						continue;
+					}					
 					//display the recived data from the server
 					if($this->debug) echo "[RECIVE] ".$this->server['READ_BUFFER']; 
 					
@@ -273,20 +275,22 @@ class IRC{
 	}
 	
 	public function addActionHandler(&$object, $function, $regex){
-		$this->actionHandlers[] = array('object' 		=> $object,
-									    'function'  	=> $function,
-							      	    'regex' 		=> $regex);
+		$this->actionHandlers[] = array('object' => $object,
+			          		'function'  => $function,
+						'regex' => $regex);
 	}
 	
 	public function addTimeHandler(&$object, $function, $seconds){
-		$this->timeHandlers[] = array('object' 		=> $object,
-									  'function'	=> $function,
-							      	  'seconds' 	=> $seconds,
-									  'lastRun'		=> time());
+		$this->timeHandlers[] = array('object' => $object,
+					      'function' => $function,
+					      'seconds' => $seconds,
+					      'lastRun'	=> time());
 	}
 	
 	private function runActionHandlers($msg, $channel, $who)
 	{
+		if($this->debug) echo "Running action handlers\n";
+		
 		if($channel == $this->nick)
 		{
 			$channel = $who;
@@ -315,7 +319,9 @@ class IRC{
 	}
 	
 	private function runTimeHandlers()
-	{		
+	{
+		if($this->debug) echo "Running time handlers\n";
+		
 		//Run the handlers
 		foreach($this->timeHandlers as $key => $handler)
 		{
