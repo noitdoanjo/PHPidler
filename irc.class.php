@@ -131,7 +131,8 @@ class IRC{
 					//get a line of data from server
 					$this->server['READ_BUFFER'] = fgets($this->server['SOCKET'], 1024); 
 					if(empty($this->server['READ_BUFFER'])){
-						if($this->debug) echo "Received no data\n"; 
+						if($this->debug) echo "Received no data\n";
+						sleep(1); //To avoid 100% cpu use
 						continue;
 					}					
 					//display the recived data from the server
