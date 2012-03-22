@@ -110,10 +110,13 @@ class IRC{
 		while($this->reconnect){
 			$this->server = array(); //we will use an array to store all the server data.
 			//Open the socket connection to the IRC server
+			echo "Connecting to {$this->serverHost}:{$this->serverPort}\n";
 			$this->server['SOCKET'] = fsockopen(($this->serverSsl ? 'ssl://' : '') . $this->serverHost, $this->serverPort, $errno, $errstr, 2);
-			socket_set_blocking($this->server['SOCKET'], false); 
+			
 			if($this->server['SOCKET'])
 			{
+				socket_set_blocking($this->server['SOCKET'], false);
+				
 				//Ok, we have connected to the server, now we have to send the login commands.
 				$this->sendCommand("PASS NOPASS\n\r"); //Sends the password not needed for most servers
 				$this->sendCommand("NICK $this->nick\n\r"); //sends the nickname
