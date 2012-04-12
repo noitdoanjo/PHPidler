@@ -39,7 +39,7 @@ class IRC{
 	 *
 	 * @param mixed $chan A string or array of strings with the name(s) of the joined channel(s) 
 	 */
-	public function addChannels($chan){
+	private function addChannels($chan){
 		array_push($this->serverChannels, $chan);
 	}
 	
@@ -48,7 +48,7 @@ class IRC{
 	 *
 	 * @param mixed $chan A string or array of strings with the name(s) of the parted channel(s) 
 	 */
-	public function removeChannels($chan){
+	private function removeChannels($chan){
 		if (!is_array($chan)) {
 			foreach ($this->serverChannels as $key => $this_channel){
 				if($this_channel == $chan){
