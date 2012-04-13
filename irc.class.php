@@ -15,6 +15,7 @@ class IRC{
 	private $plugins = array();
 	private $actionHandlers = array();
 	private $timeHandlers = array();
+	private $handlersId = array();
 	private $server;
 	
 	public function __construct($data)
@@ -275,10 +276,20 @@ class IRC{
 		}
 	}
 	
+	/*
+	 * @return mixed The last key in $array
+	 */
+	private function lastArrayKey($array){
+		end($array);
+		return key($array);
+	}
+	
 	public function addActionHandler(&$object, $function, $regex){
 		$this->actionHandlers[] = array('object' => $object,
 			          		'function'  => $function,
 						'regex' => $regex);
+		
+		return $this->lastArrayKey($this->actionHandlers);
 	}
 	
 	public function addTimeHandler(&$object, $function, $seconds){
@@ -286,6 +297,16 @@ class IRC{
 					      'function' => $function,
 					      'seconds' => $seconds,
 					      'lastRun'	=> time());
+		
+		return $this->lastArrayKey($this->timeHandlers);
+	}
+	
+	public function removeActionHandler($id){
+		unset($this->actionHandlers[$id]);
+	}
+	
+	public function removeTimeHandler($id){
+		unset($this->timeHandlers[$id]);
 	}
 	
 	private function runActionHandlers($msg, $channel, $who)
