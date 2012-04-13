@@ -62,7 +62,6 @@ class paste_plugin{
 					$irc->sayToChannel($who . ': usage: .paste [send|private|public|cancel|lang <py|md|php|rb|(...)>]', $channel);
 					break;
 			}
-			print_r($matches);
 		}
 		
 		if ((sizeof($this->currentPastes) === 0) and ($this->handlerId != null)) {
