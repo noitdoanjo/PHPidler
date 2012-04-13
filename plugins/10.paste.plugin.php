@@ -25,6 +25,7 @@ class paste_plugin{
 		if(isset($matches[1])){
 			switch ($matches[1]) {
 				case 'send':
+				case 'submit':
 					$gist = new gist;
 					$gist->setFileName('PHPIdler' . (isset($this->currentPastes[$who]['lang']) ? '.' . $this->currentPastes[$who]['lang'] : ''));
 					$gist->setPublic($this->currentPastes[$who]['public']);
