@@ -70,7 +70,7 @@ class gist{
      */
     public function getResult($what = ''){
 	if ($what) {
-	    return $this->response[$what];
+	    return isset($this->response[$what])?:false;
 	}else{
 	    return $this->response;
 	}
