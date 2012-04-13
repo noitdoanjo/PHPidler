@@ -11,6 +11,7 @@ class gist{
     private $description = '';
     private $fileName = 'PHPidler';
     private $return = false;
+    private $response = null;
     
     /**
      * Sets if the gist is private or public
