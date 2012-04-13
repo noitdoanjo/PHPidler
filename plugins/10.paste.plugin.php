@@ -9,7 +9,7 @@ class paste_plugin{
 	private $handlerId = null;
 	
 	public function __construct(&$irc){	
-		$irc->addActionHandler($this, 'handlePaste', '/^\.paste(?: (\S+))(?: (\S+))?/s');	
+		$irc->addActionHandler($this, 'handlePaste', '/^\.paste(?: (\S+))?(?: (\S+))?/s');	
 	}
 
 	public function handlePaste(&$irc,$msg,$channel,$matches,$who) 
