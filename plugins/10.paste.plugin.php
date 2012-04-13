@@ -29,7 +29,7 @@ class paste_plugin{
 					$gist->setFileName('PHPIdler' . (isset($this->currentPastes[$who]['lang']) ? '.' . $this->currentPastes[$who]['lang'] : ''));
 					$gist->setPublic($this->currentPastes[$who]['public']);
 					$gist->paste($this->currentPastes[$who]['text']);
-					$irc->sayToChannel($who . ': ' . $gist->getResult('html_url'), $channel);
+					$irc->sayToChannel($who . ': ' . ($gist->getResult('html_url') ? $gist->getResult('html_url') : 'couldn\'t create a new gist'), $channel);
 					unset($this->currentPastes[$who]);
 					break;
 				
