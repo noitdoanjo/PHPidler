@@ -74,7 +74,7 @@ class paste_plugin{
 	}
 	
 	public function addText(&$irc,$msg,$channel,$matches,$who){
-		if (isset($this->currentPastes[$who])) {
+		if ((isset($this->currentPastes[$who])) and (strpos($msg, '.paste') !== 0)) {
 			$this->currentPastes[$who]['text'] = $this->currentPastes[$who]['text'] . $msg 	. "\n";
 		}
 	}
