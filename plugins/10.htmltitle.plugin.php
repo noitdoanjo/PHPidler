@@ -46,7 +46,7 @@ class htmltitle_plugin{
 		}else if (! ($this->ipIsPrivate($ip) or $this->ipIsLoopback($ip)) ) {
 			if ($file = file_get_contents($matches[1])) {
 				//Max lenght is 256 bytes
-				if (preg_match('@<title>([^<]{1,256}).*?</title>@,', $file, $matches)) {
+				if (preg_match('@<title>([^<]{1,256}).*?</title>@m', $file, $matches)) {
 					if (strlen($matches[1]) == 256) {
 						$matches[1].='...';
 					}
