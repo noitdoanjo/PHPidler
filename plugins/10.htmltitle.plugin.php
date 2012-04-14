@@ -46,12 +46,12 @@ class htmltitle_plugin{
 		}else if (! ($this->ipIsPrivate($ip) or $this->ipIsLoopback($ip)) ) {
 			if ($file = file_get_contents($matches[1])) {
 				//Max lenght is 256 bytes
-				if (preg_match('@<title>([^<]{1,256}).*?</title>@m', $file, $matches)) {
+				if (preg_match('@<title>([^<]{1,256}).*?</title>@mi', $file, $matches)) {
 					if (strlen($matches[1]) == 256) {
 						$matches[1].='...';
 					}
 					//str_replace is to avoid sending multiple lines when the title is something\nlike\nthis
-					$irc->sayToChannel('Title: ' . str_replace("\n", '', html_entity_decode($matches[1])), $channel);
+					$irc->sayToChannel('Title: ' . str_replace("\n", '', str_replace("\r", '', html_entity_decode($matches[1]))), $channel);
 				}
 			}
 		}else{
