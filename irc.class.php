@@ -20,6 +20,7 @@ class IRC{
 	
 	public function __construct($data)
 	{
+		//load the configuration
 		foreach($data as $key => $value)
 		{
 			if(isset($this->$key))
@@ -284,6 +285,11 @@ class IRC{
 		return key($array);
 	}
 	
+	/*
+	 * Adds a hook that runs when something is said
+	 * 
+	 * @return integer The id of the hook, needed to delete it
+	 */
 	public function addActionHandler(&$object, $function, $regex){
 		$this->actionHandlers[] = array('object' => $object,
 			          		'function'  => $function,
@@ -292,6 +298,11 @@ class IRC{
 		return $this->lastArrayKey($this->actionHandlers);
 	}
 	
+	/*
+	 * Adds a hook that runs periodically
+	 * 
+	 * @return integer The id of the hook, needed to delete it
+	 */
 	public function addTimeHandler(&$object, $function, $seconds){
 		$this->timeHandlers[] = array('object' => $object,
 					      'function' => $function,
