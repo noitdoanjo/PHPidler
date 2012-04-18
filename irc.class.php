@@ -344,16 +344,6 @@ class IRC{
 		{
 			if (preg_match($handler['regex'], $msg, $matches))
 			{
-				//Clean the matches
-				foreach($matches as $key => $value) {
-					if(empty($value))
-					{
-						unset($matches[$key]);
-					}else{
-						$matches[$key] = trim($matches[$key]);
-					}
-				}
-				$matches = array_values($matches); 
 				//Call it!
 				echo 'Running '.get_class($handler['object']).' -> '.$handler['function']."\n";
 				$handler['object']->$handler['function']($this,$msg,$channel,$matches,$who);
