@@ -74,6 +74,16 @@ class IRC{
 		if($this->debug) echo '[SEND] ' . $cmd; //displays it on the screen
 	}
 	
+	//kick someone
+	public function kick($channel, $who, $reason = null){
+		$channel = str_replace(' ', '', $channel);
+		if($reason === null){
+			$this->sendCommand('KICK ' . $channel . ' ' . $who );
+		}else{
+			$this->sendCommand('KICK ' . $channel . ' ' . $who . ': ' . $reason);
+		}
+	}
+	
 	//Send messages to users/channels
 	public function sayToChannel($msg, $channel, $allowSpecial = false)
 	{
