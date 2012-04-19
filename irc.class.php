@@ -83,7 +83,7 @@ class IRC{
 	 * @param string $cmd the command to send
 	 */
 	public function sendCommand($cmd){
-		$this->sendRaw($cmd . "\n");
+		$this->sendRaw($cmd . "\r\n");
 	}
 	
 	//kick someone
