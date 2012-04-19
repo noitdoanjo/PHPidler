@@ -68,19 +68,31 @@ class IRC{
 		}
 	}
 	
-	//Send Raw commands
+	/*
+	 * Sends raw text to the server
+	 *
+	 * @param string $cmd the text to send
+	 */
+	public function sendRaw($text){
+		fwrite($this->server['SOCKET'], $cmd, strlen($cmd));
+	}
+	
+	/*
+	 * Sends raw text to the server followed by \n
+	 *
+	 * @param string $cmd the command to send
+	 */
 	public function sendCommand($cmd){
-		fwrite($this->server['SOCKET'], $cmd, strlen($cmd)); //sends the command to the server
-		if($this->debug) echo '[SEND] ' . $cmd; //displays it on the screen
+		$this->sendRaw($cmd . "\n");
 	}
 	
 	//kick someone
 	public function kick($channel, $who, $reason = null){
 		$channel = str_replace(' ', '', $channel);
 		if($reason === null){
-			$this->sendCommand('KICK ' . $channel . ' ' . $who . "\n");
+			$this->sendCommand('KICK ' . $channel . ' ' . $who);
 		}else{
-			$this->sendCommand('KICK ' . $channel . ' ' . $who . ' ' . $reason . "\n");
+			$this->sendCommand('KICK ' . $channel . ' ' . $who . ' ' . $reason);
 		}
 	}
 	
@@ -110,7 +122,7 @@ class IRC{
 				$msg  = substr($msg, 0, $len);
 			}
 			
-			$this->sendCommand('PRIVMSG '.$channel.' :'.$msg."\r\n");
+			$this->sendCommand('PRIVMSG '.$channel.' :'.$msg);
 			if (isset($msg2)) {
 				return $this->sayToChannel($msg2,$channel, true);
 			}
@@ -130,9 +142,9 @@ class IRC{
 				socket_set_blocking($this->server['SOCKET'], false);
 				
 				//Ok, we have connected to the server, now we have to send the login commands.
-				$this->sendCommand("PASS NOPASS\n\r"); //Sends the password not needed for most servers
-				$this->sendCommand("NICK $this->nick\n\r"); //sends the nickname
-				$this->sendCommand("USER $this->nick USING PHP IRC\n\r"); //sends the user must have 4 paramters
+				$this->sendCommand('PASS NOPASS'); //Sends the password not needed for most servers
+				$this->sendCommand('NICK ' . $this->nick); //sends the nickname
+				$this->sendCommand('USER ' . $this->nick . ' USING PHP IRC'); //sends the user must have 4 paramters
 				while(!@feof($this->server['SOCKET'])) //while we are connected to the server
 				{
 					//If we are using plugins, run the time handlers
@@ -165,7 +177,7 @@ class IRC{
 							
 							//Join the channels
 							foreach ($this->serverChannels as $chan){
-								$this->sendCommand("JOIN {$chan}\n\r"); 
+								$this->sendCommand('JOIN ' . $chan); 
 							}
 							break;
 						
@@ -173,12 +185,12 @@ class IRC{
 						//477: You need a registered nick to join that channel.
 						//If a channel has +r and we try to join before nickserv accepts our password, try again
 							preg_match('@ (#.*?) :Cannot @', $this->server['READ_BUFFER'], $matches);
-							$this->sendCommand("JOIN {$matches[1]}\n\r"); 
+							$this->sendCommand('JOIN ' . $matches[1]); 
 							break;
 						
 						case 'PING':
 						//Reply with pong
-							$this->sendCommand('PONG :' . substr($this->server['READ_BUFFER'], 6)); 
+							$this->sendRaw('PONG :' . substr($this->server['READ_BUFFER'], 6)); 
 							//As you can see i dont have it reply with just "PONG"
 							//It sends PONG and the data recived after the "PING" text on that recived line
 							//Reason being is some irc servers have a "No Spoof" feature that sends a key after the PING
