@@ -78,9 +78,9 @@ class IRC{
 	public function kick($channel, $who, $reason = null){
 		$channel = str_replace(' ', '', $channel);
 		if($reason === null){
-			$this->sendCommand('KICK ' . $channel . ' ' . $who );
+			$this->sendCommand('KICK ' . $channel . ' ' . $who . "\n");
 		}else{
-			$this->sendCommand('KICK ' . $channel . ' ' . $who . ': ' . $reason);
+			$this->sendCommand('KICK ' . $channel . ' ' . $who . ' ' . $reason . "\n");
 		}
 	}
 	
