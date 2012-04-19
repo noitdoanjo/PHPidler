@@ -74,7 +74,7 @@ class IRC{
 	 * @param string $cmd the text to send
 	 */
 	public function sendRaw($text){
-		fwrite($this->server['SOCKET'], $cmd, strlen($cmd));
+		fwrite($this->server['SOCKET'], $text, strlen($text));
 	}
 	
 	/*
