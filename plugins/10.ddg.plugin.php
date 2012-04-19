@@ -18,7 +18,7 @@ class ddg_plugin{
 		if (isset($page['AbstractText'])) {
 			if (($page['AbstractText'] !== '') or (isset($page['AbstractURL']) and ($page['AbstractURL'] !== ''))) {
 				$irc->sayToChannel($who . ': ' . html_entity_decode($page['AbstractText'], ENT_QUOTES, 'utf-8'), $channel);
-			}elseif ( (!isset($page['Answer'])) or ($page['Answer'] === '') ) {
+			}elseif ( ((!isset($page['Answer'])) or ($page['Answer'] === '')) and (!isset($page['AbstractURL']) or ($page['AbstractURL'] !== '')) ) {
 				$irc->sayToChannel($who . ': ' . $matches[1] . ' not found. Try https://duckduckgo.com/?q=' . urlencode($matches[1]), $channel);
 			}
 		}
