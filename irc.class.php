@@ -140,7 +140,6 @@ class IRC{
 			if($this->server['SOCKET'])
 			{
 				socket_set_blocking($this->server['SOCKET'], false);
-				
 				//Ok, we have connected to the server, now we have to send the login commands.
 				$this->sendCommand('PASS NOPASS'); //Sends the password not needed for most servers
 				$this->sendCommand('NICK ' . $this->nick); //sends the nickname
@@ -313,6 +312,7 @@ class IRC{
 	 * @return integer The id of the hook, needed to delete it
 	 */
 	public function addActionHandler(&$object, $function, $regex){
+		if ($this->debug) echo 'Adding handler ' . $regex . ' for ' . $function . "()\n";
 		$this->actionHandlers[] = array('object' => $object,
 			          		'function'  => $function,
 						'regex' => $regex);
@@ -326,6 +326,7 @@ class IRC{
 	 * @return integer The id of the hook, needed to delete it
 	 */
 	public function addTimeHandler(&$object, $function, $seconds){
+		if ($this->debug) echo 'Adding handler that runs each' . $seconds . ' seconds for ' . $function . "()\n";
 		$this->timeHandlers[] = array('object' => $object,
 					      'function' => $function,
 					      'seconds' => $seconds,
