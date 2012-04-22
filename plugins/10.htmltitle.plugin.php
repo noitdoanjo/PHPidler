@@ -51,7 +51,7 @@ class htmltitle_plugin{
 						$matches[1].='...';
 					}
 					//str_replace is to avoid sending multiple lines when the title is something\nlike\nthis
-					$irc->sayToChannel('Title: ' . str_replace("\n", '', str_replace("\r", '', html_entity_decode($matches[1]))), $channel);
+					$irc->sayToChannel('Title: ' . str_replace("\n", '', str_replace("\r", '', html_entity_decode($matches[1], ENT_QUOTES, 'utf-8'))), $channel);
 				}
 			}
 		}else{
