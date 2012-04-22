@@ -68,6 +68,8 @@ class IRC{
 		}
 	}
 	
+	
+	
 	/*
 	 * Sends raw text to the server
 	 *
@@ -128,6 +130,8 @@ class IRC{
 			}
 		}
 	}
+	
+	
 
 	public function loadPlugins()
 	{
@@ -299,6 +303,8 @@ class IRC{
 			}
 		}
 	}
+	
+	
 	
 	/*
 	 * @return mixed The last key in $array
