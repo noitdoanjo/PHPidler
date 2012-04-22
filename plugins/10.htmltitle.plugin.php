@@ -4,7 +4,6 @@
 		http://<something>
 		https://<something>
 */
-//ToDo: check if the url is loopback or lan
 class htmltitle_plugin{
 
 	public function __construct(&$irc){	
