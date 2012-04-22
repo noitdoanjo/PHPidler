@@ -294,7 +294,8 @@ class IRC{
 				}
 				echo 'Disconnected from server';	
 			}else{
-				die('Could not connect to server. Error #'.$errno.' ('.$errstr.')');
+				echo 'Could not connect to server. Error #'.$errno.' ('.$errstr.')';
+				sleep(1);
 			}
 		}
 	}
