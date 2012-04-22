@@ -20,7 +20,7 @@ class manageconfig_plugin{
 	}
 	
 	
-	private function get(&$irc,$msg,$channel,$matches,$who)
+	public function get(&$irc,$msg,$channel,$matches,$who)
 	{
 	}
 	
@@ -28,15 +28,15 @@ class manageconfig_plugin{
 	{
 	}
 	
-	private function showList(&$irc,$msg,$channel,$matches,$who)
+	public function showList(&$irc,$msg,$channel,$matches,$who)
 	{
 	}
 	
-	private function reload(&$irc,$msg,$channel,$matches,$who)
+	public function reload(&$irc,$msg,$channel,$matches,$who)
 	{
 	}
 	
-	private function load(&$irc,$msg,$channel,$matches,$who)
+	public function load(&$irc,$msg,$channel,$matches,$who)
 	{
 	}
 }
