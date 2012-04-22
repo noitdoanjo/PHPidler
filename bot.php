@@ -17,7 +17,7 @@ if(!isset($config)) die('No configuration!'."\n");
 $irc = new IRC($config);
 
 //Load plugins
-$irc->initBot();
+$irc->loadPlugins();
 
 //And send it online!
 $irc->connect();

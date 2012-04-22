@@ -9,7 +9,7 @@ class IRC{
 	public $nickservPassword = '';
 	public $pluginDir = './plugins/';
 	public $debug = false;
-	public $startbotting = false;
+	public $usingPlugins = false;
 	public $reconnect = true;
 	public $pluginConfig = array();
 	private $plugins = array();
@@ -129,8 +129,47 @@ class IRC{
 		}
 	}
 
+	public function loadPlugins()
+	{
+		if(file_exists($this->pluginDir))
+		{
+			//Batch loading!
+			$dir = scandir($this->pluginDir);
+			foreach($dir as $file)
+			{
+				if(is_file($file) and preg_match('/\.(.*?)\.plugin\.php$/',$file, $pluginName))
+				{
+					//A plugin. Let's load it!
+					$thisfile = $this->pluginDir . '/' . basename($file);
+					$syntaxcheck = shell_exec('php -l '.escapeshellarg($thisfile));
+					if(strpos($syntaxcheck,'No syntax errors detected')!==false)
+					{
+						//It's OK, will not disturb us 
+						include($thisfile);
+						echo 'OK Loading:    '.$file."\n";
+						
+						//Instantiate the plugin's class and add it to the array
+						$pluginName = $pluginName[1] . '_plugin';
+						if (class_exists($pluginName)) {
+							$this->plugins[] = new $pluginName($this);
+						}
+					}else{
+						//Fuckin' coder! You wanted to kill me!
+						echo 'Error Loading: '.$file.' (syntax error)'."\n";
+					}
+				}
+			}
+			//Enable plugins now
+			$this->usingPlugins = true;
+		}else{
+			echo 'Not using Plugin System, the bot will just connect.'."\n";
+			$this->usingPlugins = false;
+		}
+	}
+
 	public function connect(){
 		set_time_limit(0);
+		
 		while($this->reconnect){
 			$this->server = array(); //we will use an array to store all the server data.
 			//Open the socket connection to the IRC server
@@ -143,11 +182,11 @@ class IRC{
 				//Ok, we have connected to the server, now we have to send the login commands.
 				$this->sendCommand('PASS NOPASS'); //Sends the password not needed for most servers
 				$this->sendCommand('NICK ' . $this->nick); //sends the nickname
-				$this->sendCommand('USER ' . $this->nick . ' USING PHP IRC'); //sends the user must have 4 paramters
+				$this->sendCommand('USER ' . $this->nick . ' USING PHP BOT'); //sends the user must have 4 paramters
 				while(!@feof($this->server['SOCKET'])) //while we are connected to the server
 				{
 					//If we are using plugins, run the time handlers
-					if ($this->startbotting == true ) {
+					if ($this->usingPlugins == true ) {
 						$this->runTimeHandlers();
 					}
 					
@@ -224,7 +263,7 @@ class IRC{
 					
 					
 					//If we are using plugins and somebody say something, we want to run the action handlers
-					if (($this->startbotting == true) and ($this->server['command'] == 'PRIVMSG'))
+					if (($this->usingPlugins == true) and ($this->server['command'] == 'PRIVMSG'))
 					{
 						//Someone said something!
 						$msg = explode('PRIVMSG ',$this->server['READ_BUFFER'],2);
@@ -257,44 +296,6 @@ class IRC{
 			}else{
 				die('Could not connect to server. Error #'.$errno.' ('.$errstr.')');
 			}
-		}
-	}
-
-	public function initBot()
-	{
-		if(file_exists($this->pluginDir))
-		{
-			//Batch loading!
-			$dir = scandir($this->pluginDir);
-			foreach($dir as $file)
-			{
-				if($file != '.' && $file != '..' && preg_match('/\.(.*?)\.plugin\.php$/',$file, $pluginName))
-				{
-					//A plugin. Let's load it!
-					$thisfile = realpath($this->pluginDir).'/'.basename($file);
-					$syntaxcheck = shell_exec('php -l '.escapeshellarg($thisfile));
-					if(strpos($syntaxcheck,'No syntax errors detected')!==false)
-					{
-						//It's OK, will not disturb us :p
-						include($thisfile);
-						echo 'OK Loading:    '.$file."\n";
-						
-						//Instantiate the plugin's class and add it to the array
-						$pluginName = $pluginName[1] . '_plugin';
-						if (class_exists($pluginName)) {
-							$this->plugins[] = new $pluginName($this);
-						}
-					}else{
-						//Fuckin' coder! You wanted to kill me!
-						echo 'Error Loading: '.$file.' (syntax error)'."\n";
-					}
-				}
-			}
-			//Enable plugins now
-			$this->startbotting = true;
-		}else{
-			echo 'Not using Plugin System, the bot will just connect.'."\n";
-			$this->startbotting = null;
 		}
 	}
 	
