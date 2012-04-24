@@ -153,15 +153,17 @@ class IRC{
 						echo 'OK Loading:    '.$file."\n";
 						
 						//Instantiate the plugin's class and add it to the array
-						$pluginName = $pluginName[1] . '_plugin';
-						if (class_exists($pluginName)) {
-							$this->plugins[] = new $pluginName($this);
+						$pluginName = $pluginName[1];
+						$className = $pluginName . '_plugin';
+						if (class_exists($className)) {
+							$this->plugins[$pluginName] = new $className($this);
 						}
 					}else{
 						//Fuckin' coder! You wanted to kill me!
 						echo 'Error Loading: '.$file.' (syntax error)'."\n";
 					}
-				}
+				}else{
+				echo (int)is_file($file)."\n";}
 			}
 			//Enable plugins now
 			$this->usingPlugins = true;
@@ -169,6 +171,22 @@ class IRC{
 			echo 'Not using Plugin System, the bot will just connect.'."\n";
 			$this->usingPlugins = false;
 		}
+	}
+	
+	/*
+	 * @return array A numeric array with the names of the loaded plugins
+	 */
+	public function getLoadedPlugins(){
+		return array_keys($this->plugins);
+	}
+	
+	/*
+	 * @param $name The name of the plugin
+	 * @return object An instance of the class {$name}_plugin or false if it doesn't exists
+	 */
+	public function getPlugin($name){
+		return isset($this->plugins[$name]) ? $this->plugins[$name] : false;
+
 	}
 
 	public function connect(){
