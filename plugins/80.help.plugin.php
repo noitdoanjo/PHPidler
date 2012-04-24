@@ -11,14 +11,21 @@ class help_plugin{
 	public function __construct(&$irc){	
 		$irc->addActionHandler($this, 'showHelp', '/^\.help(?: \.?(.+))?/s');
 		
-		$this->setHelp('help', ' [command]: Shows help about [command]. When [command] isn\'nt present, show a list of available commands.', true);
+		//iterate over all the plugins and try to get the get help from $plugin->pluginHelp
 		foreach ($irc->getLoadedPlugins() as $plugin){
 			if(method_exists($irc->getPlugin($plugin), 'pluginHelp')){
 				$this->parseHelpArray($irc->getPlugin($plugin)->pluginHelp());
 			}
 		}
+		//$this isn't in $irc->plugins yet, so if $this->pluginHelp existed it wasn't going to be called
+		$this->setHelp('help', ' [command]: Shows help about [command]. When [command] isn\'nt present, show a list of available commands.', true);
 	}
 	
+	/*
+	 * Adds information from an array to $helpText
+	 *
+	 * @param array $array can be an array with data to be added to $this->helpText or an array of arrays
+	 */
 	private function parseHelpArray($array){
 		assert('is_array($array)');
 		assert('isset($array[0])');
@@ -32,6 +39,13 @@ class help_plugin{
 		}
 	}
 
+	/*
+	 * Adds information to $helpText
+	 *
+	 * @param string $command
+	 * @param string $helpText
+	 * @param boolean $showInList
+	 */
 	public function setHelp($command, $helpText, $showInList = false){	
 		$this->helpText[$command] = $helpText;
 		if($showInList){
