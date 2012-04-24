@@ -141,12 +141,12 @@ class IRC{
 			$dir = scandir($this->pluginDir);
 			foreach($dir as $file)
 			{
-				if(is_file($this->pluginDir . '/' . $file) and preg_match('/\.(.*?)\.plugin\.php$/',$file, $pluginName))
+				$fileFullPath = realpath($this->pluginDir) . '/' . basename($file);
+				if(is_file($fileFullPath) and preg_match('/\.(.*?)\.plugin\.php$/',$file, $pluginName))
 				{
 					//A plugin. Let's load it!
-					$thisfile = $this->pluginDir . '/' . basename($file);
-					$syntaxcheck = shell_exec('php -l '.escapeshellarg($thisfile));
-					if(strpos($syntaxcheck,'No syntax errors detected')!==false)
+					$syntaxcheck = shell_exec('php -l '.escapeshellarg($fileFullPath));
+					if (strpos($syntaxcheck, 'No syntax errors detected') !== false)
 					{
 						//It's OK, will not disturb us 
 						include($thisfile);
