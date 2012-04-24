@@ -10,6 +10,10 @@ class ddg_plugin{
 	public function __construct(&$irc){	
 		$irc->addActionHandler($this, 'duckDuckGo', '/^\.ddg (.+)/s');	
 	}
+	
+	public function pluginHelp(){
+		return array('ddg', ' <topic>: Searchs information about <topic> using duckduckgo zero-click info api. You can also use duckduckgo !bang sintax.', true);
+	}
 
 	public function duckDuckGo(&$irc,$msg,$channel,$matches,$who) 
 	{

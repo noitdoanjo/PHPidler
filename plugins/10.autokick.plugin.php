@@ -18,6 +18,15 @@ class autokick_plugin{
 		$this->irc = $irc;
 	}
 	
+	public function pluginHelp(){
+		return array(
+			     array('autokick', ' <action>: Manages autokick lists. <action> can be add, list or del.', true),
+			     array('autokick add', ' <pcre>: Adds an autokick rule for all the messages matching <pcre>.'),
+			     array('autokick list', ': Shows a list of active autokick rules.'),
+			     array('autokick del', ' <number>: Deletes the autokick rule <number>.'),
+			     );
+	}
+	
 	/*
 	 * Checks if the user talking has to be kicked
 	 */

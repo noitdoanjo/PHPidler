@@ -9,7 +9,19 @@ class paste_plugin{
 	private $handlerId = null;
 	
 	public function __construct(&$irc){	
-		$irc->addActionHandler($this, 'handlePaste', '/^\.paste(?: (\S+))?(?: (\S+))?/s');	
+		$irc->addActionHandler($this, 'handlePaste', '/^\.paste(?: (\S+))?(?: (\S+))?/s');
+	}
+	
+	public function pluginHelp(){
+		return array(
+				array('paste', ' [command]: It will start saving everything you write to send it later to github\'s gist. Command can be send, submit, private, public, cancel or lang. ', true),
+				array('paste send', ': Sends the saved text to github\'s gist and returns the url.'),
+				array('paste submit', ': Alias for .paste send.'),
+				array('paste cancel', ': Discards the saved text.'),
+				array('paste private', ': Sets the gist visibility to private.'),
+				array('paste public', ': Sets the gist visibility to public.'),
+				array('paste lang', ' <language>: Sets the syntax higlighting to <language>. It can be py,md,php,rb, etc...'),
+			    );
 	}
 
 	public function handlePaste(&$irc,$msg,$channel,$matches,$who) 

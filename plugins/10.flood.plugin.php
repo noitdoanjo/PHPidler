@@ -9,6 +9,13 @@ class flood_plugin{
 	public function __construct(&$irc){	
 		$irc->addActionHandler($this, 'flood', '/^\.(flood|floodctcp) (\d+) (\S+?) (.+)/');
 	}
+	
+	public function pluginHelp(){
+		return array(
+			     array('flood', ' <number> <who> <what>: Says <what> to <who> <number> times.', true),
+			     array('floodctcp', ' <number> <who> <what>: Says <what> to <who> <number> times via ctcp messages.', true),
+			     );
+	}
 
 	public function flood(&$irc,$msg,$channel,$matches,$who)
 	{

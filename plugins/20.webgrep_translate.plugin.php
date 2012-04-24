@@ -12,6 +12,10 @@ class webgrep_translate_plugin extends webgrep{
 			   'stripNewLines' => true,
 			   'htmlDecode' => true,
 			   'stripMultipleBlanks' => true);
+	
+	public function pluginHelp(){
+		return array('translate', ' <word>: Translates <word> from english to spanish.', true);
+	}
 }
 
 

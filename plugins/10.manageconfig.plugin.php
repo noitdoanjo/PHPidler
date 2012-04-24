@@ -19,6 +19,10 @@ class manageconfig_plugin{
 		$irc->addActionHandler($this, 'reload', '/^\.config reload/');
 	}
 	
+	public function pluginHelp(){
+		return array();
+	}
+	
 	
 	public function get(&$irc,$msg,$channel,$matches,$who)
 	{

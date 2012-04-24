@@ -10,6 +10,10 @@ class memoryusage_plugin{
 		$irc->addActionHandler($this, 'memoryUsageToChannel', '/^\.memusage( real)?/');
 	}
 	
+	public function pluginHelp(){
+		return array('memusage', ' [real]: Shows how much ram is being used. I .memusage real is used, it also counts the memory used by the php engine.', true);
+	}
+	
 	private function byte_convert($bytes)
 	{
 		$symbol = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB');

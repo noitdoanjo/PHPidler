@@ -12,4 +12,8 @@ class webgrep_php_plugin extends webgrep{
 			   'stripNewLines' => true,
 			   'htmlDecode' => true,
 			   'stripMultipleBlanks' => true);
+	
+	public function pluginHelp(){
+		return array('php', ' <function>: Shows the description of <function> in php.net.', true);
+	}
 }

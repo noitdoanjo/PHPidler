@@ -1,13 +1,17 @@
 <?php
 /*
 	Commands:
-		.hex string
+		.hex <text>
 */
 
 class hex_plugin{
 	
 	public function __construct(&$irc){	
 		$irc->addActionHandler($this, 'hexToChannel', '/^\.hex (.*)/');
+	}
+	
+	public function pluginHelp(){
+		return array('hex', ' <text>: Transforms <text> to hexa.', true);
 	}
 	
 	/**

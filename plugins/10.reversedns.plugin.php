@@ -9,6 +9,10 @@ class reversedns_plugin{
 	public function __construct(&$irc){	
 		$irc->addActionHandler($this, 'reverse', '/^\.reverse (.+)/');
 	}
+	
+	public function pluginHelp(){
+		return array('reversedns', ' <host>: Shows other domains in the same IP address as <host>.', true);
+	}
 
 	public function reverse(&$irc,$msg,$channel,$matches,$who) 
 	{

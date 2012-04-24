@@ -15,6 +15,15 @@ class join_plugin{
 		$irc->addActionHandler($this, 'partChannel', '/^\.(p|part) #(\S+)( (.+))?/');
 	}
 	
+	public function pluginHelp(){
+		return array(
+			     array('part', ' <#channel>: Joins <#channel>.', true),
+			     array('p', ' <#channel>: Alias for .part.', true),
+			     array('join', ' <#channel>: Parts <#channel>.', true),
+			     array('j', ' <#channel>: Alias for .join.', true),
+			     );
+	}
+	
 	public function joinChannel(&$irc,$msg,$channel,$matches,$who)
 	{
 		if ($irc->userLevels->getLevel($who) >= USER_LEVEL_ADMIN) {

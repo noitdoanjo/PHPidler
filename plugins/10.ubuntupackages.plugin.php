@@ -10,6 +10,10 @@ class ubuntupackages_plugin{
 		$irc->addActionHandler($this, 'ubuntuSearchPackage', '/^\.ubuntu (.*)/');
 	}
 	
+	public function pluginHelp(){
+		return array('ubuntu', ' <package>: Searchs the ubuntu repos by package name.', true);
+	}
+	
 	public function ubuntuSearchPackage(&$irc,$msg,$channel,$matches,$who) 
 	{
 		$irc->sayToChannel('Wait a second '.$who.', I\'ll check in packages.ubuntu.com',$channel);

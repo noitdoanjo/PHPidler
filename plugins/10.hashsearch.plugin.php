@@ -10,6 +10,10 @@ class hashsearch_plugin{
 		$irc->addActionHandler($this, 'searchMd5', '/^\.md5 ([0-9a-fA-F]{32})/');
 	}
 	
+	public function pluginHelp(){
+		return array('md5', ' <hash>: Searchs the plain-text for <hash>', true);
+	}
+	
 	/**
 	 * Searches for the plaintext of a given md5 hash
 	 */

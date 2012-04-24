@@ -9,6 +9,10 @@ class ping_plugin{
 	public function __construct(&$irc){	
 		$irc->addActionHandler($this, 'pingHost', '/^\.ping (\S+)/');
 	}
+	
+	public function pluginHelp(){
+		return array('ping', ' <host>: Pings a host.', true);
+	}
 
 	/**
 	 * Pings a host

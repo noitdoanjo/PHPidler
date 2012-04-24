@@ -12,6 +12,10 @@ class hash_plugin{
 		$irc->addActionHandler($this, 'hashToChannel', '/^\.hash (?:(help)|(' . implode('|', $algos) . ') (.*))/');
 	}
 	
+	public function pluginHelp(){
+		return array('paste', ' <algo> <string>: Applies the <algo> hash algorith to <string>. .hash help shows a list of valid algorithms.', true);
+	}
+	
 	/**
 	 * Outputs the hash of a string using the specified algorithm. Shows help if the algorithm is invalid
 	 */

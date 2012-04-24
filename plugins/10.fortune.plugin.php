@@ -20,6 +20,10 @@ class fortune_plugin{
 		}
 	}
 	
+	public function pluginHelp(){
+		return array('fortune', ' <file>: Shows a random quote from a fortune file. If used as .fortune list, it will show a list of available files.', true);
+	}
+	
 	public function showFortune(&$irc,$msg,$channel,$matches,$who) 
 	{
 		if(isset($matches[1])){
