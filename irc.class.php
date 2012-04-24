@@ -149,7 +149,7 @@ class IRC{
 					if (strpos($syntaxcheck, 'No syntax errors detected') !== false)
 					{
 						//It's OK, will not disturb us 
-						include($thisfile);
+						include($fileFullPath);
 						echo 'OK Loading:    '.$file."\n";
 						
 						//Instantiate the plugin's class and add it to the array
