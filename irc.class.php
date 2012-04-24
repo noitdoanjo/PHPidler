@@ -141,7 +141,7 @@ class IRC{
 			$dir = scandir($this->pluginDir);
 			foreach($dir as $file)
 			{
-				if(is_file($file) and preg_match('/\.(.*?)\.plugin\.php$/',$file, $pluginName))
+				if(is_file($this->pluginDir . '/' . $file) and preg_match('/\.(.*?)\.plugin\.php$/',$file, $pluginName))
 				{
 					//A plugin. Let's load it!
 					$thisfile = $this->pluginDir . '/' . basename($file);
@@ -162,8 +162,7 @@ class IRC{
 						//Fuckin' coder! You wanted to kill me!
 						echo 'Error Loading: '.$file.' (syntax error)'."\n";
 					}
-				}else{
-				echo (int)is_file($file)."\n";}
+				}
 			}
 			//Enable plugins now
 			$this->usingPlugins = true;
