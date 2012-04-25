@@ -13,6 +13,7 @@ class help_plugin{
 		
 		//iterate over all the plugins and try to get the get help from $plugin->pluginHelp
 		foreach ($irc->getLoadedPlugins() as $plugin){
+			if ($irc->debug) echo 'Loading help from ' . $plugin . " \n";
 			if(method_exists($irc->getPlugin($plugin), 'pluginHelp')){
 				$this->parseHelpArray($irc->getPlugin($plugin)->pluginHelp());
 			}
@@ -27,15 +28,14 @@ class help_plugin{
 	 * @param array $array can be an array with data to be added to $this->helpText or an array of arrays
 	 */
 	private function parseHelpArray($array){
-		assert('is_array($array)');
-		assert('isset($array[0])');
-		
-		if(is_array($array[0])){
-			foreach ($array as $subArray){
-				$this->parseHelpArray($subArray);
+		if (isset($array[0]) and is_array($array)) {
+			if(is_array($array[0])){
+				foreach ($array as $subArray){
+					$this->parseHelpArray($subArray);
+				}
+			}else{
+				$this->setHelp($array[0], $array[1], (isset($array[2]) ? $array[2] : false));
 			}
-		}else{
-			$this->setHelp($array[0], $array[1], (isset($array[2]) ? $array[2] : false));
 		}
 	}
 
