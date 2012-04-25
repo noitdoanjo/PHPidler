@@ -11,7 +11,7 @@ class say_plugin{
 	}
 	
 	public function pluginHelp(){
-		return array('say', '  <somebody|channel> <something>: Says <something> to <somebody> or in <channel>', true);
+		return array('say', ' <somebody|channel> <something>: Says <something> to <somebody> or in <channel>', true);
 	}
 
 	public function sayToChannel(&$irc,$msg,$channel,$matches,$who) 
