@@ -134,7 +134,7 @@ class IRC{
 	//Send messages to users/channels
 	public function actionInChannel($msg, $channel)
 	{
-		$this->sayToChannel(chr(1) . 'ACTION ' . $msg, $channel, true);
+		$this->sayToChannel(chr(1) . 'ACTION ' . $msg . chr(1), $channel, true);
 	}
 	
 	
